@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "37OGZ2Eawoc=",
+  "success": true,
+  "projectFilePath": "/home/crazy/Documents/dev/Templates/ServiceHub/Backend/Backend.csproj",
+  "expectedPackageFiles": [
+    "/home/crazy/.nuget/packages/microsoft.aspnetcore.openapi/9.0.9/microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "/home/crazy/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512",
+    "/home/crazy/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.9/microsoft.aspnetcore.app.ref.9.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}
