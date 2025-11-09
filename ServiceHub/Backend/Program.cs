@@ -48,6 +48,8 @@ builder.Services.AddAuthorizationBuilder()
 // Register custom services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IOrdersService, OrdersService>();
 
 
 
