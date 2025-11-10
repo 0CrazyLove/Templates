@@ -5,7 +5,7 @@ namespace Backend.Services.Interfaces;
 
 public interface IOrdersService
 {
-    Task<IEnumerable<Order>> GetOrdersAsync();
+    Task<IEnumerable<OrderResponseDto>> GetOrdersAsync();
     Task<Order?> GetOrderByIdAsync(int id);
-    Task<Order> CreateOrderAsync(OrderDto orderDto);
+    Task<OrderResponseDto> CreateOrderAsync(OrderDto orderDto, string userId);
 }

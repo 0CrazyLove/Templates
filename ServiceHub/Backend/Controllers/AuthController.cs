@@ -8,6 +8,7 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
+    // POST: api/auth/register
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
@@ -18,6 +19,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(response);
     }
 
+    // POST: api/auth/login
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {

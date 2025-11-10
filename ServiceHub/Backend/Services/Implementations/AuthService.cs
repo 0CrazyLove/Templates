@@ -1,4 +1,4 @@
-using Backend.Models;
+using backend.DTOs;
 using Backend.DTOs;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -8,11 +8,12 @@ using System.Security.Claims;
 using System.Text;
 
 
+
 namespace Backend.Services.Implementations;
 
 public class AuthService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) : IAuthService
 {
-    public async Task<(User? response, bool succeeded)> RegisterUserAsync(RegisterDto model)
+    public async Task<(AuthResponseDto? response, bool succeeded)> RegisterUserAsync(RegisterDto model)
     {
         var user = new IdentityUser
         {
@@ -31,7 +32,7 @@ public class AuthService(UserManager<IdentityUser> userManager, SignInManager<Id
 
         var token = GenerateJwtToken(user, roles);
 
-        var response = new User
+        var response = new AuthResponseDto
         {
             Token = token,
             Username = user.UserName!,
@@ -40,7 +41,7 @@ public class AuthService(UserManager<IdentityUser> userManager, SignInManager<Id
         };
         return (response, true);
     }
-    public async Task<(User? response, bool succeeded)> LoginUserAsync(LoginDto model)
+    public async Task<(AuthResponseDto? response, bool succeeded)> LoginUserAsync(LoginDto model)
     {
         if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
         {
@@ -71,7 +72,7 @@ public class AuthService(UserManager<IdentityUser> userManager, SignInManager<Id
         var roles = await userManager.GetRolesAsync(user);
         var token = GenerateJwtToken(user, roles);
 
-        var response = new User
+        var response = new AuthResponseDto
         {
             Token = token,
             Username = user.UserName!,
