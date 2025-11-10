@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
-
 // Configure DbContext
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
 
@@ -64,10 +63,11 @@ builder.Services.AddAuthorizationBuilder()
 
 
 // Register custom services
+builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
 
 
 
@@ -80,14 +80,6 @@ using (var scope = app.Services.CreateScope())
     await SeedAdminUser(services);
 }
 
-// Seed data
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated(); // Ensures the in-memory database is created
-    DataSeeder.Seed(context);
-}
 
 //app.UseHttpsRedirection();
 

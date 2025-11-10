@@ -7,9 +7,10 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = "Admin")]
+[Authorize(Policy = "AdminPolicy")]
 public class DashboardController(IDashboardService dashboardService) : ControllerBase
 {
+    // GET: api/dashboard/stats
     [HttpGet("stats")]
     public async Task<ActionResult<DashboardStatsDto>> GetStats()
     {
