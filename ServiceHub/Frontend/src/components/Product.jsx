@@ -47,7 +47,7 @@ export default function Products() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-700 border-t-red-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-medium border-t-primary-accent"></div>
       </div>
     );
   }
@@ -68,8 +68,8 @@ export default function Products() {
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-white mb-4">Nuestros Productos</h2>
-        <p className="text-gray-300 max-w-xl mx-auto">
+        <h2 className="text-4xl font-bold text-primary-lightest mb-4">Nuestros Productos</h2>
+        <p className="text-primary-light max-w-xl mx-auto">
           Explora nuestra selección de productos de calidad
         </p>
       </div>
@@ -81,8 +81,8 @@ export default function Products() {
             onClick={() => handleCategoryChange(category)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm ${
               (category === 'Todos' && !selectedCategory) || selectedCategory === category
-                ? 'bg-red-500 text-white shadow-md'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'bg-primary-accent text-white shadow-md'
+                : 'bg-primary-dark text-primary-light hover:bg-primary-medium'
             }`}
           >
             {category}
@@ -91,7 +91,7 @@ export default function Products() {
       </div>
 
       {products.length === 0 ? (
-        <div className="text-center py-16 text-gray-400 text-lg">
+        <div className="text-center py-16 text-primary-light text-lg">
           No hay productos disponibles
         </div>
       ) : (
@@ -99,9 +99,9 @@ export default function Products() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-gray-900 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-800"
+              className="bg-primary-darkest rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-primary-dark"
             >
-              <div className="h-64 bg-gray-800 overflow-hidden">
+              <div className="h-64 bg-primary-dark overflow-hidden">
                 {product.imageUrl ? (
                   <img
                     src={product.imageUrl}
@@ -109,23 +109,23 @@ export default function Products() {
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-500">
+                  <div className="w-full h-full flex items-center justify-center text-primary-accent">
                     Sin imagen
                   </div>
                 )}
               </div>
 
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-white mb-2 truncate">
+                <h3 className="text-lg font-semibold text-primary-lightest mb-2 truncate">
                   {product.name}
                 </h3>
 
-                <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                <p className="text-primary-light text-sm mb-3 line-clamp-2">
                   {product.description}
                 </p>
 
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xl font-bold text-red-500">
+                  <span className="text-xl font-bold text-primary-accent">
                     ${product.price.toFixed(2)}
                   </span>
 
@@ -135,7 +135,7 @@ export default function Products() {
                 </div>
 
                 {product.category && (
-                  <span className="inline-block bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full mb-3 border border-gray-700">
+                  <span className="inline-block bg-primary-dark text-primary-light text-xs px-3 py-1 rounded-full mb-3 border border-primary-medium">
                     {product.category}
                   </span>
                 )}
@@ -144,8 +144,8 @@ export default function Products() {
                   disabled={product.stock === 0}
                   className={`w-full py-2 rounded-md font-medium transition-all duration-200 ${
                     product.stock > 0
-                      ? 'bg-red-500 text-white hover:bg-red-600'
-                      : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      ? 'bg-primary-accent text-white hover:bg-opacity-80'
+                      : 'bg-primary-medium text-primary-accent cursor-not-allowed'
                   }`}
                 >
                   {product.stock > 0 ? 'Agregar al carrito' : 'No disponible'}
@@ -161,19 +161,19 @@ export default function Products() {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-red-500 text-white rounded-md disabled:bg-gray-700 disabled:cursor-not-allowed hover:bg-red-600"
+            className="px-4 py-2 bg-primary-accent text-white rounded-md disabled:bg-primary-medium disabled:cursor-not-allowed hover:bg-opacity-80"
           >
             Anterior
           </button>
 
-          <span className="text-gray-300">
+          <span className="text-primary-light">
             Página {currentPage} de {totalPages}
           </span>
 
           <button
             onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-red-500 text-white rounded-md disabled:bg-gray-700 disabled:cursor-not-allowed hover:bg-red-600"
+            className="px-4 py-2 bg-primary-accent text-white rounded-md disabled:bg-primary-medium disabled:cursor-not-allowed hover:bg-opacity-80"
           >
             Siguiente
           </button>
