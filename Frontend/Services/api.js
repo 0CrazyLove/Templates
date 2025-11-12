@@ -1,4 +1,3 @@
-// Configuración base del API
 const API_URL = 'http://localhost:5097/api';
 
 // Helper para manejar respuestas del API
@@ -10,16 +9,18 @@ async function handleResponse(response) {
   return response.json();
 }
 
-// ===== PRODUCTOS =====
+// ===== SERVICIOS =====
 
 /**
- * Obtener todos los productos con paginación y filtros
+ * Obtener todos los servicios con paginación y filtros
  * @param {Object} params - Parámetros de consulta
  * @param {string} params.category - Categoría opcional
  * @param {number} params.page - Número de página (default: 1)
  * @param {number} params.pageSize - Tamaño de página (default: 10)
+ * @param {number} params.minPrice - Precio mínimo opcional
+ * @param {number} params.maxPrice - Precio máximo opcional
  */
-export async function getProducts({ category = '', page = 1, pageSize = 10 } = {}) {
+export async function getServices({ category = '', page = 1, pageSize = 10, minPrice = null, maxPrice = null } = {}) {
   try {
     const params = new URLSearchParams({
       page: page.toString(),
@@ -29,87 +30,107 @@ export async function getProducts({ category = '', page = 1, pageSize = 10 } = {
     if (category) {
       params.append('category', category);
     }
-
-    const response = await fetch(`${API_URL}/products?${params}`);
+    
+    if (minPrice !== null) {
+      params.append('minPrice', minPrice.toString());
+    }
+    
+    if (maxPrice !== null) {
+      params.append('maxPrice', maxPrice.toString());
+    }
+    
+    const response = await fetch(`${API_URL}/services?${params}`);
     return await handleResponse(response);
   } catch (error) {
-    console.error('Error al obtener productos:', error);
+    console.error('Error al obtener servicios:', error);
     throw error;
   }
 }
 
 /**
- * Obtener un producto por ID
- * @param {number} id - ID del producto
+ * Obtener un servicio por ID
+ * @param {number} id - ID del servicio
  */
-export async function getProductById(id) {
+export async function getServiceById(id) {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`);
+    const response = await fetch(`${API_URL}/services/${id}`);
     return await handleResponse(response);
   } catch (error) {
-    console.error(`Error al obtener producto ${id}:`, error);
+    console.error(`Error al obtener servicio ${id}:`, error);
     throw error;
   }
 }
 
 /**
- * Crear un nuevo producto (requiere autenticación de Admin)
- * @param {Object} productData - Datos del producto
+ * Obtener todas las categorías de servicios
+ */
+export async function getServiceCategories() {
+  try {
+    const response = await fetch(`${API_URL}/services/categories`);
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    throw error;
+  }
+}
+
+/**
+ * Crear un nuevo servicio (requiere autenticación de Admin)
+ * @param {Object} serviceData - Datos del servicio
  * @param {string} token - Token JWT de autenticación
  */
-export async function createProduct(productData, token) {
+export async function createService(serviceData, token) {
   try {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetch(`${API_URL}/services`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(productData)
+      body: JSON.stringify(serviceData)
     });
     return await handleResponse(response);
   } catch (error) {
-    console.error('Error al crear producto:', error);
+    console.error('Error al crear servicio:', error);
     throw error;
   }
 }
 
 /**
- * Actualizar un producto (requiere autenticación de Admin)
- * @param {number} id - ID del producto
- * @param {Object} productData - Datos actualizados
+ * Actualizar un servicio (requiere autenticación de Admin)
+ * @param {number} id - ID del servicio
+ * @param {Object} serviceData - Datos actualizados
  * @param {string} token - Token JWT de autenticación
  */
-export async function updateProduct(id, productData, token) {
+export async function updateService(id, serviceData, token) {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}/services/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(productData)
+      body: JSON.stringify(serviceData)
     });
     
-    if (response.status === 204) {
+    if (response.status === 204 || response.status === 200) {
       return { success: true };
     }
-    
     return await handleResponse(response);
   } catch (error) {
-    console.error(`Error al actualizar producto ${id}:`, error);
+    console.error(`Error al actualizar servicio ${id}:`, error);
     throw error;
   }
 }
 
 /**
- * Eliminar un producto (requiere autenticación de Admin)
- * @param {number} id - ID del producto
+ * Eliminar un servicio (requiere autenticación de Admin)
+ * @param {number} id - ID del servicio
  * @param {string} token - Token JWT de autenticación
  */
-export async function deleteProduct(id, token) {
+export async function deleteService(id, token) {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}/services/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -119,10 +140,9 @@ export async function deleteProduct(id, token) {
     if (response.status === 204) {
       return { success: true };
     }
-    
     return await handleResponse(response);
   } catch (error) {
-    console.error(`Error al eliminar producto ${id}:`, error);
+    console.error(`Error al eliminar servicio ${id}:`, error);
     throw error;
   }
 }
