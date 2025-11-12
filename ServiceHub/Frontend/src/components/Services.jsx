@@ -5,7 +5,7 @@ const services = [
   { name: 'Diseño Gráfico', description: 'Logos, banners y más.' },
   { name: 'Marketing Digital', description: 'Llega a más clientes.' },
   { name: 'Redacción y Traducción', description: 'Contenido de calidad.' },
-  { name: 'Video y Animación', description: 'Videos que impactan.' },
+  { name: 'Video y Motion Graphics', description: 'Videos que impactan.' },
   { name: 'Música y Audio', description: 'Producción de audio profesional.' },
 ];
 

@@ -46,7 +46,7 @@ export default function Services() {
     'Diseño Gráfico', 
     'Marketing Digital', 
     'Redacción y Traducción', 
-    'Video y Animación', 
+    'Video y Motion Graphics', 
     'Música y Audio'
   ];
 
