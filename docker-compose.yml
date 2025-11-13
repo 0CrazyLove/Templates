@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  # SQL Server Database
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: servicehub_database
+    environment:
+      SA_PASSWORD: "${DB_PASSWORD:-PeneRicoBrawlStart2!}"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - servicehub_network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "sa", "-P", "${DB_PASSWORD:-PeneRicoBrawlStart2!}", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+
+  # .NET Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: servicehub_backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5097
+      CONNECTION_STRING: "Server=database;Database=AppDB;User Id=${DB_USER:-sa};Password=${DB_PASSWORD:-PeneRicoBrawlStart2!};Encrypt=false;TrustServerCertificate=true;"
+      JWT_ISSUER: "${JWT_ISSUER:-ProductAPI}"
+      JWT_AUDIENCE: "${JWT_AUDIENCE:-ProductWebClients}"
+      JWT_EXPIRATION_MINUTES: "60"
+    ports:
+      - "5097:5097"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - servicehub_network
+    volumes:
+      - ./Backend:/app/Backend
+    restart: unless-stopped
+
+  # Node.js Frontend (Astro)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: servicehub_frontend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "4321:4321"
+    depends_on:
+      - backend
+    networks:
+      - servicehub_network
+    restart: unless-stopped
+
+  # Optional: Adminer for Database Management UI (only for development)
+  adminer:
+    image: adminer:latest
+    container_name: servicehub_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - servicehub_network
+    restart: unless-stopped
+    profiles: ["debug"]
+
+networks:
+  servicehub_network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+    driver: local
