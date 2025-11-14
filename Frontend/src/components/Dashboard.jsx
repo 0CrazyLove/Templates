@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth.js';
 import { getDashboardStats } from '../../Services/api.js';
+import OrdersList from './OrdersList.jsx';
 
 export default function Dashboard() {
   const { token, isAuthenticated, mounted } = useAuth();
@@ -55,9 +56,8 @@ export default function Dashboard() {
     );
   }
 
-  // stats shape: { totalSales, servicetCount, orderCount } per backend DTO naming
   const totalSales = stats?.totalSales ?? stats?.TotalSales ?? 0;
-  const serviceCount = stats?.servicetCount ?? stats?.ServicetCount ?? stats?.ServicetCount ?? stats?.Servicetcount ?? stats?.serviceCount ?? 0;
+  const serviceCount = stats?.serviceCount ?? stats?.ServiceCount ?? 0;
   const orderCount = stats?.orderCount ?? stats?.OrderCount ?? 0;
 
   return (
@@ -80,6 +80,9 @@ export default function Dashboard() {
           <p className="text-2xl font-semibold text-primary-accent mt-2">{orderCount}</p>
         </div>
       </div>
+      {/* Lista de órdenes del usuario */}
+      <OrdersList />
     </div>
   );
 }
+
