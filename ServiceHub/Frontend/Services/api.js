@@ -227,3 +227,69 @@ export async function getDashboardStats(token) {
     throw error;
   }
 }
+
+// ===== ORDERS =====
+
+/**
+ * Obtener órdenes del usuario (requiere token)
+ * @param {string} token - Token JWT
+ */
+export async function getOrders(token) {
+  try {
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_URL}/orders`, {
+      method: 'GET',
+      headers
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error al obtener órdenes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtener una orden por ID (requiere token)
+ */
+export async function getOrderById(id, token) {
+  try {
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_URL}/orders/${id}`, {
+      method: 'GET',
+      headers
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    console.error(`Error al obtener orden ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Crear una nueva orden (requiere token de cliente)
+ * @param {Object} orderDto - { orderItems: [{ serviceId, quantity }, ...] }
+ * @param {string} token - Token JWT
+ */
+export async function createOrder(orderDto, token) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_URL}/orders`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(orderDto)
+    });
+
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error al crear orden:', error);
+    throw error;
+  }
+}
