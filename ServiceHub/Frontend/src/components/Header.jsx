@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth.js';
+import CartIcon from './CartIcon.jsx';
 
 export default function Header() {
   const { user, isAuthenticated, logout, mounted } = useAuth();
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -47,13 +49,10 @@ export default function Header() {
     return false;
   };
 
-  // Guardar en estado para evitar evaluación durante SSR / render temprano
-  const [showAdmin, setShowAdmin] = useState(false);
-
   useEffect(() => {
-    if (mounted) {
-      setShowAdmin(isUserAdmin());
-    }
+    if (!mounted) return;
+    
+    setShowAdmin(isUserAdmin());
   }, [mounted, user]);
 
   // No renderizar hasta que el hook esté montado
@@ -103,6 +102,8 @@ export default function Header() {
             <a href="/dashboard" className="text-primary-light hover:text-primary-lightest px-3 py-2">Dashboard</a>
           )}
         </nav>
+        
+        <CartIcon />
         
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
