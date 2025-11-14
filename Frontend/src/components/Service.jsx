@@ -9,36 +9,37 @@ export default function Services() {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
+  // kept simple: navigation to service details page handles purchases
 
-  useEffect(() => {
-    loadServices();
-  }, [currentPage, selectedCategory, priceRange]);
+useEffect(() => {
+  loadServices();
+}, [currentPage, selectedCategory, priceRange]);
 
-  const loadServices = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+const loadServices = async () => {
+  try {
+    setLoading(true);
+    setError(null);
 
-      const data = await getServices({
-        category: selectedCategory,
-        page: currentPage,
-        pageSize: 12,
-        minPrice: priceRange.min,
-        maxPrice: priceRange.max
-      });
+    const data = await getServices({
+      category: selectedCategory,
+      page: currentPage,
+      pageSize: 12,
+      minPrice: priceRange.min,
+      maxPrice: priceRange.max
+    });
 
-      setServices(data.items || data);
+    setServices(data.items || data);
 
-      if (data.totalPages) {
-        setTotalPages(data.totalPages);
-      }
-    } catch (err) {
-      setError('Error al cargar los servicios. Por favor intenta de nuevo.');
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (data.totalPages) {
+      setTotalPages(data.totalPages);
     }
-  };
+  } catch (err) {
+    setError('Error al cargar los servicios. Por favor intenta de nuevo.');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const categories = [
     'Todos', 
@@ -257,16 +258,17 @@ export default function Services() {
                     </span>
                   )}
 
-                  <button
-                    disabled={!service.available}
-                    className={`w-full py-2.5 rounded-md font-medium transition-all duration-200 ${
+                  <a
+                    href={`/service/${service.id}`}
+                    className={`w-full inline-block text-center py-2.5 rounded-md font-medium transition-all duration-200 ${
                       service.available
                         ? 'bg-primary-accent text-white hover:bg-opacity-80'
                         : 'bg-primary-medium text-primary-light cursor-not-allowed'
                     }`}
+                    aria-disabled={!service.available}
                   >
                     {service.available ? 'Ver detalles' : 'No disponible'}
-                  </button>
+                  </a>
                 </div>
               </div>
             ))}
