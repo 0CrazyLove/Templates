@@ -10,16 +10,6 @@ async function handleResponse(response) {
 }
 
 // ===== SERVICIOS =====
-
-/**
- * Obtener todos los servicios con paginación y filtros
- * @param {Object} params - Parámetros de consulta
- * @param {string} params.category - Categoría opcional
- * @param {number} params.page - Número de página (default: 1)
- * @param {number} params.pageSize - Tamaño de página (default: 10)
- * @param {number} params.minPrice - Precio mínimo opcional
- * @param {number} params.maxPrice - Precio máximo opcional
- */
 export async function getServices({ category = '', page = 1, pageSize = 10, minPrice = null, maxPrice = null } = {}) {
   try {
     const params = new URLSearchParams({
@@ -27,17 +17,9 @@ export async function getServices({ category = '', page = 1, pageSize = 10, minP
       pageSize: pageSize.toString(),
     });
     
-    if (category) {
-      params.append('category', category);
-    }
-    
-    if (minPrice !== null) {
-      params.append('minPrice', minPrice.toString());
-    }
-    
-    if (maxPrice !== null) {
-      params.append('maxPrice', maxPrice.toString());
-    }
+    if (category) params.append('category', category);
+    if (minPrice !== null) params.append('minPrice', minPrice.toString());
+    if (maxPrice !== null) params.append('maxPrice', maxPrice.toString());
     
     const response = await fetch(`${API_URL}/services?${params}`);
     return await handleResponse(response);
@@ -47,10 +29,6 @@ export async function getServices({ category = '', page = 1, pageSize = 10, minP
   }
 }
 
-/**
- * Obtener un servicio por ID
- * @param {number} id - ID del servicio
- */
 export async function getServiceById(id) {
   try {
     const response = await fetch(`${API_URL}/services/${id}`);
@@ -61,9 +39,6 @@ export async function getServiceById(id) {
   }
 }
 
-/**
- * Obtener todas las categorías de servicios
- */
 export async function getServiceCategories() {
   try {
     const response = await fetch(`${API_URL}/services/categories`);
@@ -74,11 +49,6 @@ export async function getServiceCategories() {
   }
 }
 
-/**
- * Crear un nuevo servicio (requiere autenticación de Admin)
- * @param {Object} serviceData - Datos del servicio
- * @param {string} token - Token JWT de autenticación
- */
 export async function createService(serviceData, token) {
   try {
     const response = await fetch(`${API_URL}/services`, {
@@ -96,12 +66,6 @@ export async function createService(serviceData, token) {
   }
 }
 
-/**
- * Actualizar un servicio (requiere autenticación de Admin)
- * @param {number} id - ID del servicio
- * @param {Object} serviceData - Datos actualizados
- * @param {string} token - Token JWT de autenticación
- */
 export async function updateService(id, serviceData, token) {
   try {
     const response = await fetch(`${API_URL}/services/${id}`, {
@@ -123,11 +87,6 @@ export async function updateService(id, serviceData, token) {
   }
 }
 
-/**
- * Eliminar un servicio (requiere autenticación de Admin)
- * @param {number} id - ID del servicio
- * @param {string} token - Token JWT de autenticación
- */
 export async function deleteService(id, token) {
   try {
     const response = await fetch(`${API_URL}/services/${id}`, {
@@ -148,15 +107,6 @@ export async function deleteService(id, token) {
 }
 
 // ===== AUTENTICACIÓN =====
-
-/**
- * Registrar un nuevo usuario
- * @param {Object} data - Datos del registro
- * @param {string} data.userName - Nombre de usuario
- * @param {string} data.email - Email del usuario
- * @param {string} data.password - Contraseña
- * @param {string} data.confirmPassword - Confirmación de contraseña
- */
 export async function registerUser(data) {
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -178,12 +128,6 @@ export async function registerUser(data) {
   }
 }
 
-/**
- * Login de usuario
- * @param {Object} data - Datos del login
- * @param {string} data.email - Email del usuario
- * @param {string} data.password - Contraseña
- */
 export async function loginUser(data) {
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
@@ -203,24 +147,38 @@ export async function loginUser(data) {
   }
 }
 
-// ===== DASHBOARD =====
-
+// ===== GOOGLE AUTHENTICATION =====
 /**
- * Obtener estadísticas del dashboard (requiere token Admin)
- * @param {string} token - Token JWT del usuario con permisos Admin
+ * Enviar el código de autorización de Google al backend
+ * @param {string} code - Código de autorización de Google
  */
+export async function googleCallback(code) {
+  try {
+    const response = await fetch(`${API_URL}/auth/google/callback`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code })
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error en Google callback:', error);
+    throw error;
+  }
+}
+
+// ===== DASHBOARD =====
 export async function getDashboardStats(token) {
   try {
     const headers = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-
     const response = await fetch(`${API_URL}/dashboard/stats`, {
       method: 'GET',
       headers
     });
-
     return await handleResponse(response);
   } catch (error) {
     console.error('Error al obtener estadísticas del dashboard:', error);
@@ -229,16 +187,10 @@ export async function getDashboardStats(token) {
 }
 
 // ===== ORDERS =====
-
-/**
- * Obtener órdenes del usuario (requiere token)
- * @param {string} token - Token JWT
- */
 export async function getOrders(token) {
   try {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
-
     const response = await fetch(`${API_URL}/orders`, {
       method: 'GET',
       headers
@@ -250,14 +202,10 @@ export async function getOrders(token) {
   }
 }
 
-/**
- * Obtener una orden por ID (requiere token)
- */
 export async function getOrderById(id, token) {
   try {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
-
     const response = await fetch(`${API_URL}/orders/${id}`, {
       method: 'GET',
       headers
@@ -269,24 +217,17 @@ export async function getOrderById(id, token) {
   }
 }
 
-/**
- * Crear una nueva orden (requiere token de cliente)
- * @param {Object} orderDto - { orderItems: [{ serviceId, quantity }, ...] }
- * @param {string} token - Token JWT
- */
 export async function createOrder(orderDto, token) {
   try {
     const headers = {
       'Content-Type': 'application/json'
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;
-
     const response = await fetch(`${API_URL}/orders`, {
       method: 'POST',
       headers,
       body: JSON.stringify(orderDto)
     });
-
     return await handleResponse(response);
   } catch (error) {
     console.error('Error al crear orden:', error);
