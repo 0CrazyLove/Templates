@@ -77,10 +77,10 @@ public class AuthService(
         {
             // 1. Intercambiar el código de autorización por tokens
             var tokenResponse = await ExchangeCodeForTokensAsync(authorizationCode);
-            
+
             // 2. Obtener información del usuario con el access token
             var userInfo = await GetGoogleUserInfoAsync(tokenResponse.AccessToken);
-            
+
             // 3. Buscar o crear usuario
             var user = await userManager.FindByEmailAsync(userInfo.Email);
             if (user == null)
@@ -103,11 +103,11 @@ public class AuthService(
             if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
             {
                 await SaveRefreshTokenAsync(user.Id, tokenResponse.RefreshToken, tokenResponse.ExpiresIn);
-                Console.WriteLine($"✅ Refresh token guardado para usuario {user.Email}");
+                Console.WriteLine($"Refresh token guardado para usuario {user.Email}");
             }
             else
             {
-                Console.WriteLine($"⚠️ No se recibió refresh token para usuario {user.Email}");
+                Console.WriteLine($"No se recibió refresh token para usuario {user.Email}");
             }
 
             // 5. Actualizar claims
@@ -116,7 +116,7 @@ public class AuthService(
                 c.Type == "google_id" ||
                 c.Type == "google_picture" ||
                 c.Type == "google_name").ToList();
-            
+
             if (googleClaims.Any())
             {
                 await userManager.RemoveClaimsAsync(user, googleClaims);
@@ -146,7 +146,7 @@ public class AuthService(
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error en GoogleCallbackAsync: {ex.Message}");
+            Console.WriteLine($"Error en GoogleCallbackAsync: {ex.Message}");
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
             return (null, false);
         }
@@ -183,28 +183,36 @@ public class AuthService(
         return tokenResponse;
     }
 
-    private async Task<GoogleJwtPayload> GetGoogleUserInfoAsync(string accessToken)
+  private async Task<GoogleJwtPayload> GetGoogleUserInfoAsync(string accessToken)
+{
+    var client = httpClientFactory.CreateClient();
+    client.DefaultRequestHeaders.Authorization =
+        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+    
+    var response = await client.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
+    
+    if (!response.IsSuccessStatusCode)
     {
-        var client = httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-
-        var response = await client.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception("No se pudo obtener información del usuario de Google");
-        }
-
-        var userInfo = await response.Content.ReadFromJsonAsync<GoogleJwtPayload>();
-
-        if (userInfo == null)
-        {
-            throw new Exception("Información de usuario inválida");
-        }
-
-        return userInfo;
+        throw new Exception("No se pudo obtener información del usuario de Google");
     }
+    
+    var jsonString = await response.Content.ReadAsStringAsync();
+    
+    var options = new System.Text.Json.JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+    
+    var userInfo = System.Text.Json.JsonSerializer.Deserialize<GoogleJwtPayload>(jsonString, options);
+    
+    if (userInfo == null)
+    {
+        throw new Exception("Información de usuario inválida");
+    }
+    
+    return userInfo;
+}
 
     public async Task SaveRefreshTokenAsync(string userId, string refreshToken, int expiresIn)
     {
@@ -267,16 +275,16 @@ public class GoogleJwtPayload
 {
     [System.Text.Json.Serialization.JsonPropertyName("sub")]
     public string Sub { get; set; } = string.Empty;
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("email")]
     public string Email { get; set; } = string.Empty;
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("email_verified")]
     public bool EmailVerified { get; set; }
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("picture")]
     public string? Picture { get; set; }
 }
@@ -285,13 +293,13 @@ public class GoogleTokenResponse
 {
     [System.Text.Json.Serialization.JsonPropertyName("access_token")]
     public string AccessToken { get; set; } = string.Empty;
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("refresh_token")]
     public string? RefreshToken { get; set; }
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("expires_in")]
     public int ExpiresIn { get; set; }
-    
+
     [System.Text.Json.Serialization.JsonPropertyName("token_type")]
     public string TokenType { get; set; } = string.Empty;
 }
