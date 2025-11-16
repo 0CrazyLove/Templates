@@ -3,7 +3,7 @@ using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Backend.Controllers;
+namespace Backend.Controllers.Api;
 
 /// <summary>
 /// API controller for service management operations.
