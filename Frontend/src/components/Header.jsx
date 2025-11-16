@@ -19,13 +19,11 @@ export default function Header() {
         const normalized = roles.map(r => String(r).toLowerCase());
         return normalized.includes('admin') || normalized.includes('administrator');
       }
-
       const token = user?.token || user?.Token || null;
       if (token && typeof token === 'string') {
         const parts = token.split('.');
         if (parts.length === 3) {
           const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-
           if (payload.role) {
             const r = Array.isArray(payload.role) ? payload.role : [payload.role];
             if (r.map(x => String(x).toLowerCase()).includes('admin')) return true;
@@ -34,7 +32,6 @@ export default function Header() {
             const r = Array.isArray(payload.roles) ? payload.roles : [payload.roles];
             if (r.map(x => String(x).toLowerCase()).includes('admin')) return true;
           }
-
           const roleClaimKey = Object.keys(payload).find(k => k.toLowerCase().includes('/role'));
           if (roleClaimKey) {
             const val = payload[roleClaimKey];
@@ -74,22 +71,21 @@ export default function Header() {
           </nav>
           <div className="flex items-center gap-3 ml-auto">
             <div className="w-6 h-6"></div>
-            <a>
+            <a
               href="/login"
               className="text-primary-light hover:text-primary-lightest px-3 py-2"
+            >
               Iniciar Sesión
             </a>
-
             <a
               href="/registro"
               className="bg-primary-accent hover:bg-opacity-80 text-white px-4 py-2 rounded-md transition"
             >
               Registrarse
             </a>
-
           </div>
-        </div >
-      </header >
+        </div>
+      </header>
     );
   }
 
@@ -139,14 +135,12 @@ export default function Header() {
             </>
           ) : (
             <>
-
               <a
                 href="/login"
                 className="text-primary-light hover:text-primary-lightest px-3 py-2"
               >
                 Iniciar Sesión
               </a>
-
               <a
                 href="/registro"
                 className="bg-primary-accent hover:bg-opacity-80 text-white px-4 py-2 rounded-md transition"
@@ -156,7 +150,7 @@ export default function Header() {
             </>
           )}
         </div>
-      </div >
-    </header >
+      </div>
+    </header>
   );
 }
