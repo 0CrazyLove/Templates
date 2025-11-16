@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Services.Interfaces;
 using Backend.DTOs;
 
-namespace Backend.Controllers;
+namespace Backend.Controllers.Api;
 
 /// <summary>
 /// API controller for dashboard and administrative statistics.

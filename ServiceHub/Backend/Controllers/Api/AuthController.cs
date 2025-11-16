@@ -2,7 +2,7 @@ using Backend.DTOs;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers;
+namespace Backend.Controllers.Api;
 
 /// <summary>
 /// API controller for authentication operations.

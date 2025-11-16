@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Services.Interfaces;
 using System.Security.Claims;
 
-namespace Backend.Controllers;
+namespace Backend.Controllers.Api;
 
 /// <summary>
 /// API controller for order management operations.
