@@ -139,9 +139,10 @@ export default function Header() {
     };
   }, [showProfileMenu]);
 
-  /**
+/**
    * Skeleton/placeholder header while component hydrates on client.
    * Maintains same structure as mounted component to prevent layout shift.
+   * Shows loading state instead of auth buttons to prevent flash.
    */
   if (!mounted) {
     return (
@@ -175,18 +176,8 @@ export default function Header() {
           </nav>
           <div className="flex items-center gap-3 ml-auto">
             <div className="w-6 h-6"></div>
-            <a
-              href="/login"
-              className="text-primary-light hover:text-primary-lightest px-3 py-2"
-            >
-              Login
-            </a>
-            <a
-              href="/registro"
-              className="bg-primary-accent hover:bg-opacity-80 text-white px-4 py-2 rounded-md transition"
-            >
-              Register
-            </a>
+            {/* Loading placeholder - prevents flash of login/register buttons */}
+            <div className="w-10 h-10 rounded-full bg-primary-light/20 animate-pulse"></div>
           </div>
         </div>
       </header>
