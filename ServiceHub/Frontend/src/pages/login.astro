@@ -1,13 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.jsx';
-import LoginForm from '../components/LoginForm.jsx';
+import LoginWithProviders from '../components/LoginWithProviders.jsx';
 import Footer from '../components/Footer.jsx';
 ---
 
 <Layout>
   <Header client:load />
-  
   <main class="flex-grow py-20 bg-primary-darkest">
     <div class="container mx-auto px-4">
       <div class="max-w-2xl mx-auto">
@@ -17,17 +16,9 @@ import Footer from '../components/Footer.jsx';
         <p class="text-primary-light text-center mb-12">
           Inicia sesión para acceder a todos nuestros servicios
         </p>
-        
-        <LoginForm client:load />
+        <LoginWithProviders client:load />
       </div>
     </div>
   </main>
-
   <Footer client:load />
 </Layout>
-
-<style>
-  main {
-    min-height: calc(100vh - 200px);
-  }
-</style>
