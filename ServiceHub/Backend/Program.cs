@@ -94,8 +94,18 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddSingleton<JwtSettings>();
-builder.Services.AddLogging();
-builder.Services.AddHttpClient();
+builder.Services.AddSingleton<GoogleSettings>();
+
+
+builder.Services.AddHttpClient("GoogleApi", client =>
+{
+    client.BaseAddress = new Uri("https://www.googleapis.com/oauth2/v2/");
+});
+
+builder.Services.AddHttpClient("GoogleToken", client =>
+{
+    client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
+});
 
 var app = builder.Build();
 
