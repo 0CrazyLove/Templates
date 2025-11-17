@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
+using Backend.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<IServicesService, ServicesService>();
+builder.Services.AddSingleton<JwtSettings>();
+builder.Services.AddLogging();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
