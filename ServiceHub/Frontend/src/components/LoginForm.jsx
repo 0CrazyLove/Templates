@@ -36,23 +36,23 @@ export default function LoginForm() {
     try {
       const response = await loginUser({ email, password });
       login(response, response.token);
-      
+
       setTimeout(() => {
         window.location.href = '/';
       }, 500);
     } catch (err) {
-  let errorMessage = 'Error al iniciar sesión';
-      
+      let errorMessage = 'Error al iniciar sesión';
+
       if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-  errorMessage = 'Correo o contraseña inválidos. Intenta de nuevo.';
+        errorMessage = 'Correo o contraseña inválidos. Intenta de nuevo.';
       } else if (err.message.includes('400') || err.message.includes('Bad Request')) {
-  errorMessage = 'Verifica tu información.';
+        errorMessage = 'Verifica tu información.';
       } else if (err.message.includes('500')) {
-  errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
+        errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -71,26 +71,28 @@ export default function LoginForm() {
       try {
         // Send authorization code to backend
         const response = await googleCallback(codeResponse.code);
-        
+
         // Store token and user data
         login(response, response.token);
-        
+
         // Redirect to home
         setTimeout(() => {
           window.location.href = '/';
         }, 500);
       } catch (err) {
         console.error('Google login error:', err);
-  setError('Error al iniciar sesión con Google. Por favor intenta nuevamente.');
+        setError('Error al iniciar sesión con Google. Por favor intenta nuevamente.');
       } finally {
         setLoading(false);
       }
     },
     onError: (error) => {
       console.error('Google OAuth error:', error);
-  setError('Error al conectar con Google. Por favor intenta nuevamente.');
+      setError('Error al conectar con Google. Por favor intenta nuevamente.');
     },
-    scope: 'openid email profile'
+    scope: 'openid email profile',
+    access_type: 'offline',
+    prompt: 'consent'
   });
 
   return (
@@ -99,7 +101,7 @@ export default function LoginForm() {
         <h2 className="text-2xl font-bold text-primary-lightest mb-6 text-center">
           Iniciar sesión
         </h2>
-        
+
         {/* Error message display */}
         {error && (
           <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-200 px-4 py-3 rounded-md mb-4">
@@ -109,11 +111,11 @@ export default function LoginForm() {
 
         {/* Google OAuth button */}
         <div className="mb-6">
-            <button
-              onClick={() => googleLogin()}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2.5 px-4 rounded-md border border-gray-300 transition disabled:opacity-50"
-            >
+          <button
+            onClick={() => googleLogin()}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2.5 px-4 rounded-md border border-gray-300 transition disabled:opacity-50"
+          >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
@@ -137,7 +139,7 @@ export default function LoginForm() {
         </div>
 
         {/* Divider */}
-            <div className="relative mb-6">
+        <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-primary-accent"></div>
           </div>
