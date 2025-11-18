@@ -170,8 +170,13 @@ AppDbContext context, JwtSettings jwtSettings, ILogger<AuthService> logger, Goog
             // Exchange authorization code for access and refresh tokens
             var tokenResponse = await ExchangeCodeForTokensAsync(authorizationCode);
 
+            if (tokenResponse.AccessToken is null)
+            {
+                return (null, false);
+            }
             // Retrieve user information from Google using access token
             var userInfo = await GetGoogleUserInfoAsync(tokenResponse.AccessToken);
+
 
             // Find existing user or create new one
             var user = await userManager.FindByEmailAsync(userInfo.Email);
@@ -243,7 +248,7 @@ AppDbContext context, JwtSettings jwtSettings, ILogger<AuthService> logger, Goog
     /// Makes HTTP request to Google OAuth token endpoint using provided credentials
     /// from environment variables.
     /// </summary>
-    private async Task<GoogleTokenResponseDto> ExchangeCodeForTokensAsync(string code)
+    private async Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code)
     {
         var client = httpClientFactory.CreateClient("GoogleToken");
 
@@ -264,7 +269,7 @@ AppDbContext context, JwtSettings jwtSettings, ILogger<AuthService> logger, Goog
             throw new Exception($"Failed to exchange authorization code: {errorContent}");
         }
 
-        var tokenResponse = await response.Content.ReadFromJsonAsync<GoogleTokenResponseDto>();
+        var tokenResponse = await response.Content.ReadFromJsonAsync<GoogleTokenDto>();
 
         return tokenResponse ?? throw new Exception("Failed to deserialize token response from Google");
     }
@@ -297,7 +302,7 @@ AppDbContext context, JwtSettings jwtSettings, ILogger<AuthService> logger, Goog
 
         var userInfo = System.Text.Json.JsonSerializer.Deserialize<GoogleJwtPayloadDto>(jsonString, options);
 
-        return userInfo ??  throw new Exception("Invalid user information received from Google");;
+        return userInfo ?? throw new Exception("Invalid user information received from Google"); ;
     }
 
     /// <summary>
