@@ -6,7 +6,7 @@ namespace Backend.DTOs.Auth.GoogleAuth;
 /// Represents tokens returned by Google's token endpoint.
 /// Includes access token for API calls and optional refresh token for long-lived sessions.
 /// </summary>
-public class GoogleTokenResponseDto
+public class GoogleTokenDto
 {
     /// <summary>
     /// The access token for making authenticated requests to Google APIs.
