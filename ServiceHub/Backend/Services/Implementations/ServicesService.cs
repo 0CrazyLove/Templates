@@ -1,6 +1,6 @@
 using Backend.Data;
 using Backend.Models;
-using Backend.DTOs;
+using Backend.DTOs.Services;
 using Backend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
