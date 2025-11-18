@@ -12,7 +12,7 @@ public class GoogleTokenResponseDto
     /// The access token for making authenticated requests to Google APIs.
     /// </summary>
     [JsonPropertyName("access_token")]
-    public string AccessToken { get; set; } = string.Empty;
+    public string? AccessToken { get; set; }
 
     /// <summary>
     /// The refresh token for obtaining new access tokens (optional).
@@ -27,6 +27,9 @@ public class GoogleTokenResponseDto
     [JsonPropertyName("expires_in")]
     public int ExpiresIn { get; set; }
 
+    /// <summary>
+    /// The type of token issued, typically "Bearer".
+    /// </summary>
     [JsonPropertyName("token_type")]
-    public string TokenType { get; set; } = string.Empty;
+    public string? TokenType { get; set; }
 }
