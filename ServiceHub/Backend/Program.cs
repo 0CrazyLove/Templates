@@ -106,7 +106,12 @@ builder.Services.AddHttpClient("GoogleToken", client =>
 {
     client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
 });
-
+//probar despues
+// builder.Logging.AddConsole(options =>
+// {
+//     options.FormatterName = "json";
+//     options.IncludeScopes = true;
+// });
 var app = builder.Build();
 
 // Initialize database with default admin user on application startup
