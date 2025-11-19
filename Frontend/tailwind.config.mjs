@@ -28,6 +28,9 @@ export default {
 				'primary-light': '#D4D4D4',
 				'primary-lightest': '#FAFAFA',
 			},
+			fontFamily: {
+				sans: ['Poppins', 'sans-serif'],
+			},
 		},
 	},
 	plugins: [],
