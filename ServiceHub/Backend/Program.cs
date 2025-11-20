@@ -95,6 +95,7 @@ builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+// Apply Entity Framework Core database migrations on application startup to ensure schema is up-to-date
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
