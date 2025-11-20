@@ -95,6 +95,11 @@ builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Initialize database with default admin user on application startup
 using (var scope = app.Services.CreateScope())
