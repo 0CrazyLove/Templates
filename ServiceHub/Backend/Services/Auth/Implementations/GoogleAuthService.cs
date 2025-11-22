@@ -59,6 +59,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
         }
 
         var handler = new JwtSecurityTokenHandler();
+
         var discoveryDocument = await configurationManager.GetConfigurationAsync(CancellationToken.None);
 
         var validationParameters = new TokenValidationParameters
@@ -82,11 +83,16 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
             throw new SecurityTokenException("Invalid token: unsupported algorithm");
         }
 
-        var sub = principal.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? throw new SecurityTokenException("Claim 'sub' is required");
-        var email = principal.FindFirstValue(JwtRegisteredClaimNames.Email) ?? throw new SecurityTokenException("Claim 'email' is required");
-        var emailVerified = bool.TryParse(principal.FindFirstValue("email_verified"), out var verified) && verified;
-        var name = principal.FindFirstValue(JwtRegisteredClaimNames.Name) ?? throw new SecurityTokenException("Claim 'name' is required");
-        var picture = principal.FindFirstValue("picture");
+        string GetRequiredClaim(string type) => jwt.Claims.FirstOrDefault(c => c.Type == type)?.Value ?? throw new SecurityTokenException($"Claim '{type}' is required");
+
+        string? GetOptionalClaim(string type) => jwt.Claims.FirstOrDefault(c => c.Type == type)?.Value;
+
+        var sub = GetRequiredClaim("sub");
+        var email = GetRequiredClaim("email");
+        var name = GetRequiredClaim("name");
+        var picture = GetOptionalClaim("picture");
+        var emailVerifiedStr = GetOptionalClaim("email_verified");
+        var emailVerified = bool.TryParse(emailVerifiedStr, out var isVerified) && isVerified;
 
         return new GoogleJwtPayloadDto
         {
