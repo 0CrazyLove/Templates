@@ -32,4 +32,10 @@ public class GoogleTokenDto
     /// </summary>
     [JsonPropertyName("token_type")]
     public string? TokenType { get; set; }
+
+    /// <summary>
+    /// JWT containing user identity information (OpenID Connect).
+    /// </summary>
+    [JsonPropertyName("id_token")]
+    public string? IdToken { get; set; }
 }
