@@ -12,8 +12,14 @@
 /// </summary>
 
 using Backend.Data;
-using Backend.Services.Interfaces;
-using Backend.Services.Implementations;
+using Backend.Services.BusinessServices.Interfaces;
+using Backend.Services.BusinessServices.Implemetations;
+using Backend.Services.Auth.Implementations;
+using Backend.Services.Auth.Interfaces;
+using Backend.Services.Dashboard.Implementations;
+using Backend.Services.Dashboard.Interfaces;
+using Backend.Services.Orders.Implementations;
+using Backend.Services.Orders.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -98,7 +104,6 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
-builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
