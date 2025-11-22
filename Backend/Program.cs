@@ -96,23 +96,23 @@ builder.Services.AddCors(options =>
 // Register controllers and custom business logic services
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddSingleton<JwtSettings>();
 builder.Services.AddSingleton<GoogleSettings>();
-builder.Services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(sp =>
-    new ConfigurationManager<OpenIdConnectConfiguration>(
+builder.Services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(sp => new ConfigurationManager<OpenIdConnectConfiguration>(
         "https://accounts.google.com/.well-known/openid-configuration",
         new OpenIdConnectConfigurationRetriever(),
-        new HttpDocumentRetriever()
-        {
-            RequireHttps = true
-        })
-    {
-        AutomaticRefreshInterval = TimeSpan.FromHours(12),
-        RefreshInterval = TimeSpan.FromMinutes(30)
-    }
+        new HttpDocumentRetriever() { RequireHttps = true })
+{
+    AutomaticRefreshInterval = TimeSpan.FromHours(12),
+    RefreshInterval = TimeSpan.FromMinutes(30)
+}
 );
 
 
