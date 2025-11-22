@@ -129,8 +129,7 @@ public class AuthService(
                 Roles = roles
             };
 
-            logger.LogInformation("Login successful. UserId: {UserId}, Roles: {RoleCount}, CorrelationId: {CorrelationId}",
-                user.Id, roles.Count, correlationId);
+            logger.LogInformation("Login successful for user {UserId} with {RoleCount} role(s). CorrelationId: {CorrelationId}", user.Id, roles.Count, correlationId);
 
             return (response, true);
         }
@@ -149,39 +148,37 @@ public class AuthService(
     /// </summary>
     public async Task<(AuthResponseDto? response, bool succeeded)> GoogleCallbackAsync(string authorizationCode)
     {
+        var correlationId = Activity.Current?.Id ?? Guid.NewGuid().ToString();
+
+        logger.LogInformation("Starting Google OAuth callback. CorrelationId: {CorrelationId}", correlationId);
+
         try
         {
-            // Step 1: Exchange authorization code for Google tokens
             var tokenResponse = await googleAuthService.ExchangeCodeForTokensAsync(authorizationCode);
 
             if (tokenResponse.IdToken is null)
             {
-                logger.LogWarning("Google token response missing ID token");
+                logger.LogWarning("Google token response missing ID token. CorrelationId: {CorrelationId}", correlationId);
                 return (null, false);
             }
-
-            // Step 2: Validate and decode ID token to get user information
             var userInfo = await googleAuthService.DecodeAndValidateIdTokenAsync(tokenResponse.IdToken);
 
-            // Step 3: Find existing user or create new one
             var user = await googleAuthService.FindOrCreateGoogleUserAsync(userInfo);
 
             if (user is null)
             {
-                logger.LogError("Failed to find or create Google user for email: {Email}", userInfo.Email);
+                logger.LogError("Failed to find or create Google user for email: {Email}. CorrelationId: {CorrelationId}", userInfo.Email, correlationId);
                 return (null, false);
             }
 
-            // Step 4: Store refresh token if provided
             if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
             {
                 await refreshTokenService.SaveRefreshTokenAsync(user.Id, tokenResponse.RefreshToken, tokenResponse.ExpiresIn);
+                logger.LogDebug("Refresh token saved for user {UserId}. CorrelationId: {CorrelationId}", user.Id, correlationId);
             }
 
-            // Step 5: Update user claims with Google profile information
             await googleAuthService.UpdateGoogleClaimsAsync(user, userInfo);
 
-            // Step 6: Generate JWT and return response
             var roles = await userManager.GetRolesAsync(user);
             var token = jwtTokenService.GenerateToken(user, roles, userInfo.Name, userInfo.Picture);
 
@@ -193,12 +190,13 @@ public class AuthService(
                 Roles = roles
             };
 
-            logger.LogInformation("Google OAuth successful. UserId: {UserId}, Email: {Email}", user.Id, user.Email);
+            logger.LogInformation("Google OAuth successful. UserId: {UserId}, RoleCount: {RoleCount}, CorrelationId: {CorrelationId}", user.Id, roles.Count, correlationId);
+
             return (response, true);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error during Google OAuth callback");
+            logger.LogError(ex, "Error during Google OAuth callback. CorrelationId: {CorrelationId}", correlationId);
             return (null, false);
         }
     }
