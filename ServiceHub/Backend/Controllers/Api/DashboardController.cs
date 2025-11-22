@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Backend.Services.Interfaces;
+using Backend.Services.Dashboard.Interfaces;
 using Backend.DTOs.Dashboard;
 
 namespace Backend.Controllers.Api;
