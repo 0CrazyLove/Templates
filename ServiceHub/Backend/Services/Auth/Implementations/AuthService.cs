@@ -164,9 +164,9 @@ public class AuthService(
             var userInfo = await googleAuthService.DecodeAndValidateIdTokenAsync(tokenResponse.IdToken);
 
             // Step 3: Find existing user or create new one
-            var (user, succeeded) = await googleAuthService.FindOrCreateGoogleUserAsync(userInfo);
+            var user = await googleAuthService.FindOrCreateGoogleUserAsync(userInfo);
 
-            if (!succeeded || user == null)
+            if (user is null)
             {
                 logger.LogError("Failed to find or create Google user for email: {Email}", userInfo.Email);
                 return (null, false);
