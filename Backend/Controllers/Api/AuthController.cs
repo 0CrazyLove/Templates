@@ -1,5 +1,5 @@
 using Backend.DTOs.Auth;
-using Backend.Services.Interfaces;
+using Backend.Services.Auth.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers.Api;

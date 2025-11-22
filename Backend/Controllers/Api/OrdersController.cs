@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Backend.Models;
 using Backend.DTOs.Orders;
 using Microsoft.AspNetCore.Mvc;
-using Backend.Services.Interfaces;
+using Backend.Services.Orders.Interfaces;
 using System.Security.Claims;
 
 namespace Backend.Controllers.Api;
