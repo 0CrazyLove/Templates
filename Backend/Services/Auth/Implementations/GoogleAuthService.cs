@@ -100,6 +100,12 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
 
     public async Task<IdentityUser?> FindOrCreateGoogleUserAsync(GoogleJwtPayloadDto userInfo)
     {
+        if (userInfo.Email is null)
+        {
+            logger.LogError("Google user info missing email");
+            return null;
+        }
+
         var user = await userManager.FindByEmailAsync(userInfo.Email);
 
         if (user != null)
@@ -130,9 +136,9 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
             var errors = string.Join(", ", roleResult.Errors.Select(e => $"{e.Code}: {e.Description}"));
 
             await userManager.DeleteAsync(user);
-            
+
             logger.LogWarning("Failed to add Customer role to user {UserId}. Errors: {Errors}", user.Id, errors);
-            
+
             return null;
         }
         logger.LogInformation("Created new Google user: {UserId}, Email: {Email}", user.Id, user.Email);
@@ -158,7 +164,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
 
         var claims = new List<Claim>
         {
-            new("google_id", userInfo.Sub),
+            new("google_id", userInfo.Sub ?? ""),
             new("google_picture", userInfo.Picture ?? ""),
             new("google_name", userInfo.Name ?? "")
         };
