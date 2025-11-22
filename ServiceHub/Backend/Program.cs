@@ -1,36 +1,21 @@
 /// <summary>
-/// ServiceHub Backend Application Configuration
+/// ServiceHub Backend Application Entry Point
 /// 
-/// This application serves as the backend API for the ServiceHub platform, providing:
-/// - User authentication and authorization via JWT and Google OAuth
-/// - Service management and discovery with filtering and pagination
-/// - Order processing and management
-/// - Dashboard statistics for administrators
-/// 
-/// Configuration includes database context, identity management, JWT authentication,
-/// authorization policies, CORS settings, and dependency injection setup.
+/// Clean and organized configuration using extension methods for:
+/// - Database and Identity setup
+/// - JWT and Google OAuth authentication
+/// - Authorization policies
+/// - CORS configuration
+/// - Business services registration
+/// - Database seeding
 /// </summary>
 
-using Backend.Data;
-using Backend.Services.BusinessServices.Interfaces;
-using Backend.Services.BusinessServices.Implemetations;
-using Backend.Services.Auth.Implementations;
-using Backend.Services.Auth.Interfaces;
-using Backend.Services.Dashboard.Implementations;
-using Backend.Services.Dashboard.Interfaces;
-using Backend.Services.Orders.Implementations;
-using Backend.Services.Orders.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Backend.Extensions;
+using Backend.Services.Database.Interfaces;
+using Backend.Services.Database.Implementations;
 using DotNetEnv;
-using Microsoft.AspNetCore.Identity;
-using Backend.Configurations;
 using System.Diagnostics;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
+using Backend.Configurations;
 
 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
@@ -39,151 +24,41 @@ var builder = WebApplication.CreateBuilder(args);
 // Load environment variables from .env file
 Env.Load();
 
-// Configure Entity Framework Core with SQL Server database
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+var jwtSettings = new JwtSettings();
 
-// Configure ASP.NET Core Identity with password and user requirements
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
-    options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<AppDbContext>()
-.AddDefaultTokenProviders();
+// Configure all services using extension methods
+builder.Services.AddDatabaseServices();
+builder.Services.AddJwtAuthentication(jwtSettings);
+builder.Services.AddAuthorizationPolicies();
+builder.Services.AddGoogleOAuth();
+builder.Services.AddCorsConfiguration();
+builder.Services.AddApplicationServices();
 
-// Configure JWT Bearer token authentication
-var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!;
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+// Register database seeder
+builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidateLifetime = true,
-        ValidIssuer = jwtIssuer,
-        ValidAudience = jwtAudience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
-    };
-});
-
-// Configure authorization policies
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"))
-    .AddPolicy("CustomerPolicy", policy => policy.RequireRole("Customer"));
-
-// Configure CORS to allow requests from frontend application
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:4321")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
-
-// Register controllers and custom business logic services
+// Add controllers
 builder.Services.AddControllers();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
-builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddScoped<IOrdersService, OrdersService>();
-builder.Services.AddScoped<IServicesService, ServicesService>();
-builder.Services.AddSingleton<JwtSettings>();
-builder.Services.AddSingleton<GoogleSettings>();
-builder.Services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(sp => new ConfigurationManager<OpenIdConnectConfiguration>(
-        "https://accounts.google.com/.well-known/openid-configuration",
-        new OpenIdConnectConfigurationRetriever(),
-        new HttpDocumentRetriever() { RequireHttps = true })
-{
-    AutomaticRefreshInterval = TimeSpan.FromHours(12),
-    RefreshInterval = TimeSpan.FromMinutes(30)
-}
-);
-
-
-builder.Services.AddHttpClient("GoogleApi", client =>
-{
-    client.BaseAddress = new Uri("https://www.googleapis.com/oauth2/v2/");
-});
-
-builder.Services.AddHttpClient("GoogleToken", client =>
-{
-    client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
-});
 
 var app = builder.Build();
 
-// Initialize database with default admin user on application startup
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await SeedAdminUser(services);
-}
+// Seed database on startup
+await SeedDatabaseAsync(app);
 
-// Apply CORS policy before authentication and authorization middleware
+// Configure middleware pipeline
 app.UseCors("AllowFrontend");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
 
 /// <summary>
-/// Initialize application roles and seed default admin user.
-/// 
-/// Called on startup to ensure Admin and Customer roles exist and
-/// create a default administrator account if one doesn't already exist.
-/// Default credentials: username "admin", email "admin@example.com", password "Admin123!"
+/// Seeds the database using the DatabaseSeeder service.
 /// </summary>
-/// <param name="serviceProvider">The dependency injection service provider.</param>
-async static Task SeedAdminUser(IServiceProvider serviceProvider)
+static async Task SeedDatabaseAsync(WebApplication app)
 {
-    var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    // Create Admin role if it doesn't exist
-    if (!await roleManager.RoleExistsAsync("Admin"))
-        await roleManager.CreateAsync(new IdentityRole("Admin"));
-
-    // Create Customer role if it doesn't exist
-    if (!await roleManager.RoleExistsAsync("Customer"))
-        await roleManager.CreateAsync(new IdentityRole("Customer"));
-
-    var adminEmail = "admin@example.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-    // Create default admin user if not already present
-    if (adminUser is null)
-    {
-        adminUser = new IdentityUser
-        {
-            UserName = "admin",
-            Email = adminEmail,
-            EmailConfirmed = true
-        };
-        await userManager.CreateAsync(adminUser, "Admin123!");
-        await userManager.AddToRoleAsync(adminUser, "Admin");
-    }
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+    await seeder.SeedAsync();
 }
