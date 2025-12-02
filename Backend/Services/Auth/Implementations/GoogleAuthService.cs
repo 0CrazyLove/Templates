@@ -21,7 +21,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
     /// <summary>
     /// Exchange Google authorization code for access and refresh tokens.
     /// </summary>
-    public async Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code)
+    public async Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code, CancellationToken cancellationToken)
     {
         var client = httpClientFactory.CreateClient("GoogleToken");
 
@@ -34,16 +34,16 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
             { "grant_type", "authorization_code" }
         });
 
-        var response = await client.PostAsync("token", content);
+        var response = await client.PostAsync("token", content, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
             logger.LogError("Failed to exchange authorization code: {Error}", errorContent);
             throw new Exception($"Failed to exchange authorization code: {errorContent}");
         }
 
-        var tokenResponse = await response.Content.ReadFromJsonAsync<GoogleTokenDto>();
+        var tokenResponse = await response.Content.ReadFromJsonAsync<GoogleTokenDto>(cancellationToken);
 
         return tokenResponse ?? throw new Exception("Failed to deserialize token response from Google");
     }
@@ -51,7 +51,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
     /// <summary>
     /// Decode and validate Google ID token using Google's public keys.
     /// </summary>
-    public async Task<GoogleJwtPayloadDto> DecodeAndValidateIdTokenAsync(string idToken)
+    public async Task<GoogleJwtPayloadDto> DecodeAndValidateIdTokenAsync(string idToken, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(idToken))
         {
@@ -60,7 +60,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
 
         var handler = new JwtSecurityTokenHandler();
 
-        var discoveryDocument = await configurationManager.GetConfigurationAsync(CancellationToken.None);
+        var discoveryDocument = await configurationManager.GetConfigurationAsync(cancellationToken);
 
         var validationParameters = new TokenValidationParameters
         {
@@ -76,9 +76,11 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
             RequireSignedTokens = true
         };
 
-        var principal = handler.ValidateToken(idToken, validationParameters, out var validatedToken);
+        var result = await handler.ValidateTokenAsync(idToken, validationParameters);
 
-        if (validatedToken is not JwtSecurityToken jwt || jwt.Header.Alg != SecurityAlgorithms.RsaSha256)
+        if (!result.IsValid) throw new SecurityTokenException("Invalid token", result.Exception);
+
+        if (result.SecurityToken is not JwtSecurityToken jwt || jwt.Header.Alg is not SecurityAlgorithms.RsaSha256)
         {
             throw new SecurityTokenException("Invalid token: unsupported algorithm");
         }
@@ -92,6 +94,8 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
         var name = GetRequiredClaim("name");
         var picture = GetOptionalClaim("picture");
         var emailVerifiedStr = GetOptionalClaim("email_verified");
+
+        //Validate both boolean expressions
         var emailVerified = bool.TryParse(emailVerifiedStr, out var isVerified) && isVerified;
 
         return new GoogleJwtPayloadDto

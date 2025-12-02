@@ -13,14 +13,14 @@ public interface IGoogleAuthService
     /// </summary>
     /// <param name="code">Authorization code from Google</param>
     /// <returns>Google token response containing access token, refresh token, and expiration</returns>
-    Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code);
+    Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code , CancellationToken cancellationToken);
 
     /// <summary>
     /// Decode and validate Google ID token.
     /// </summary>
     /// <param name="idToken">Google ID token (JWT)</param>
     /// <returns>Validated user information from the token</returns>
-    Task<GoogleJwtPayloadDto> DecodeAndValidateIdTokenAsync(string idToken);
+    Task<GoogleJwtPayloadDto> DecodeAndValidateIdTokenAsync(string idToken, CancellationToken cancellationToken);
     /// <summary>
     /// Find or create a user from Google authentication.
     /// </summary>
