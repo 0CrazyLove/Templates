@@ -13,13 +13,9 @@ namespace Backend.Services.Dashboard.Implementations;
 public class DashboardService(AppDbContext context) : IDashboardService
 {
     /// <summary>
-    /// Retrieve aggregated dashboard statistics.
-    /// 
-    /// Calculates:
-    /// - Total sales: sum of all order amounts
-    /// - Service count: total number of services in catalog
-    /// - Order count: total number of orders placed
+    /// Retrieves aggregated dashboard statistics including sales and counts.
     /// </summary>
+    /// <returns>A DTO containing the calculated platform statistics.</returns>
     public async Task<DashboardStatsDto> GetDashboardStatsAsync()
     {
         var totalSales = await context.Orders.SumAsync(o => o.TotalAmount);

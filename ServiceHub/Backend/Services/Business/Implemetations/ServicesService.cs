@@ -16,11 +16,14 @@ namespace Backend.Services.Business.Implemetations;
 public class ServicesService(AppDbContext context) : IServicesService
 {
     /// <summary>
-    /// Retrieve paginated services with optional filtering.
-    /// 
-    /// Applies filters in order: category, price range.
-    /// Results sorted by creation date (newest first).
+    /// Retrieves a paginated list of services with optional filtering by category and price.
     /// </summary>
+    /// <param name="category">The category to filter by (optional).</param>
+    /// <param name="page">The page number to retrieve (1-based).</param>
+    /// <param name="pageSize">The number of items per page.</param>
+    /// <param name="minPrice">The minimum price filter (optional).</param>
+    /// <param name="maxPrice">The maximum price filter (optional).</param>
+    /// <returns>A DTO containing the list of services and pagination metadata.</returns>
     public async Task<PaginatedServicesDto> GetServices(
         string? category, 
         int page, 
@@ -71,8 +74,10 @@ public class ServicesService(AppDbContext context) : IServicesService
     }
 
     /// <summary>
-    /// Retrieve a specific service by ID.
+    /// Retrieves a specific service by its unique identifier.
     /// </summary>
+    /// <param name="id">The ID of the service to retrieve.</param>
+    /// <returns>The service details if found; otherwise, null.</returns>
     public async Task<ServiceResponseDto?> GetServiceById(int id)
     {
         var service = await context.Services.FindAsync(id);
@@ -80,11 +85,10 @@ public class ServicesService(AppDbContext context) : IServicesService
     }
 
     /// <summary>
-    /// Create a new service.
-    /// 
-    /// Serializes the language list to JSON format for storage.
-    /// Sets creation and update timestamps to current UTC time.
+    /// Creates a new service in the catalog.
     /// </summary>
+    /// <param name="serviceDto">The service details to create.</param>
+    /// <returns>The created service details.</returns>
     public async Task<ServiceResponseDto> CreateService(ServiceDto serviceDto)
     {
         var newService = new Service
@@ -114,11 +118,11 @@ public class ServicesService(AppDbContext context) : IServicesService
     }
 
     /// <summary>
-    /// Update an existing service.
-    /// 
-    /// Updates all properties and sets UpdatedAt to current UTC time.
-    /// Returns null if service not found.
+    /// Updates an existing service with new details.
     /// </summary>
+    /// <param name="id">The ID of the service to update.</param>
+    /// <param name="serviceDto">The updated service details.</param>
+    /// <returns>The updated service details if found; otherwise, null.</returns>
     public async Task<ServiceResponseDto?> UpdateService(int id, ServiceDto serviceDto)
     {
         var service = await context.Services.FindAsync(id);
@@ -146,11 +150,10 @@ public class ServicesService(AppDbContext context) : IServicesService
     }
 
     /// <summary>
-    /// Delete a service.
-    /// 
-    /// Permanently removes the service from the catalog.
-    /// Returns false if service not found.
+    /// Deletes a service from the catalog.
     /// </summary>
+    /// <param name="id">The ID of the service to delete.</param>
+    /// <returns>True if the service was deleted; false if not found.</returns>
     public async Task<bool> DeleteService(int id)
     {
         var service = await context.Services.FindAsync(id);
@@ -163,10 +166,9 @@ public class ServicesService(AppDbContext context) : IServicesService
     }
 
     /// <summary>
-    /// Retrieve all available service categories.
-    /// 
-    /// Returns distinct, non-null categories sorted alphabetically.
+    /// Retrieves all unique service categories available in the catalog.
     /// </summary>
+    /// <returns>A list of unique category names, sorted alphabetically.</returns>
     public async Task<IEnumerable<string>> GetCategories()
     {
         return await context.Services

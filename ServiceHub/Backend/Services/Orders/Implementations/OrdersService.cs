@@ -15,10 +15,9 @@ namespace Backend.Services.Orders.Implementations;
 public class OrdersService(AppDbContext context) : IOrdersService
 {
     /// <summary>
-    /// Retrieve all orders with related items and services.
-    /// 
-    /// Transforms Order entities to OrderResponseDto for API responses.
+    /// Retrieves all orders with their associated items and services.
     /// </summary>
+    /// <returns>A collection of order DTOs containing order details.</returns>
     public async Task<IEnumerable<OrderResponseDto>> GetOrdersAsync()
     {
         var orders = await context.Orders
@@ -43,8 +42,10 @@ public class OrdersService(AppDbContext context) : IOrdersService
     }
 
     /// <summary>
-    /// Retrieve a specific order with all related items and services.
+    /// Retrieves a specific order by its unique identifier.
     /// </summary>
+    /// <param name="id">The ID of the order to retrieve.</param>
+    /// <returns>The order entity if found; otherwise, null.</returns>
     public async Task<Order?> GetOrderByIdAsync(int id)
     {
         return await context.Orders
@@ -54,15 +55,11 @@ public class OrdersService(AppDbContext context) : IOrdersService
     }
 
     /// <summary>
-    /// Create a new order for the specified user.
-    /// 
-    /// Process:
-    /// 1. Fetch all requested services in a single query
-    /// 2. Validate that services exist and are available
-    /// 3. Create order items with current pricing
-    /// 4. Calculate total amount
-    /// 5. Persist to database
+    /// Creates a new order for the specified user after validating services.
     /// </summary>
+    /// <param name="orderDto">The order details including items and quantities.</param>
+    /// <param name="userId">The ID of the user placing the order.</param>
+    /// <returns>The created order details as a DTO.</returns>
     public async Task<OrderResponseDto> CreateOrderAsync(OrderDto orderDto, string userId)
     {
         // Fetch all services in one query for efficiency
