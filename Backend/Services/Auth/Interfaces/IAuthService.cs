@@ -49,5 +49,5 @@ public interface IAuthService
     /// - AuthResponseDto with JWT token if authentication succeeds (null if fails)
     /// - Boolean indicating success or failure
     /// </returns>
-    Task<(AuthResponseDto? response, bool succeeded)> GoogleCallbackAsync(string code);
+    Task<(AuthResponseDto? response, bool succeeded)> GoogleCallbackAsync(string code, CancellationToken cancellationToken);
 }
