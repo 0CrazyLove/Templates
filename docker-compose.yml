@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # SQL Server Database
   database:
@@ -48,6 +46,12 @@ services:
       - servicehub_network
 
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5097/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
 
   # Node.js Frontend (Astro)
   frontend:
@@ -60,23 +64,11 @@ services:
     ports:
       - "4321:4321"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - servicehub_network
     restart: unless-stopped
-
-  # Optional: Adminer for Database Management UI (only for development)
-  adminer:
-    image: adminer:latest
-    container_name: servicehub_adminer
-    ports:
-      - "8080:8080"
-    depends_on:
-      - database
-    networks:
-      - servicehub_network
-    restart: unless-stopped
-    profiles: [ "debug" ]
 
 networks:
   servicehub_network:
