@@ -2,10 +2,10 @@ namespace Backend.Extensions;
 
 public static class HealthCheckExtensions
 {
-    public static IEndpointRouteBuilder MapHealthEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapHealthEndpoints(this IEndpointRouteBuilder service)
     {
-        app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow })).AllowAnonymous();
+        service.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow })).AllowAnonymous();
 
-        return app;
+        return service;
     }
 }
