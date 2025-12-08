@@ -27,6 +27,12 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
     /// <exception cref="Exception">Thrown when the token exchange fails or response is invalid.</exception>
     public async Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(code))
+        {
+            logger.LogError("Authorization code is null, empty or whitespace.");
+            throw new ArgumentException("Authorization code cannot be null, empty or whitespace.", nameof(code));
+        }
+
         var client = httpClientFactory.CreateClient("GoogleToken");
 
         using var content = new FormUrlEncodedContent(new Dictionary<string, string>
@@ -124,6 +130,8 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
 
     public async Task<IdentityUser?> FindOrCreateGoogleUserAsync(GoogleJwtPayloadDto userInfo)
     {
+        ArgumentNullException.ThrowIfNull(userInfo);
+        
         if (userInfo.Email is null)
         {
             logger.LogError("Google user info missing email");
@@ -174,25 +182,56 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateGoogleClaimsAsync(IdentityUser user, GoogleJwtPayloadDto userInfo)
     {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(userInfo);
+
         var existingClaims = await userManager.GetClaimsAsync(user);
-        var googleClaims = existingClaims.Where(c =>
-            c.Type == "google_id" ||
-            c.Type == "google_picture" ||
-            c.Type == "google_name").ToList();
 
-        if (googleClaims.Any())
+        // Define the claims we want to manage
+        var targetClaims = new Dictionary<string, string>
         {
-            await userManager.RemoveClaimsAsync(user, googleClaims);
-        }
-
-        var claims = new List<Claim>
-        {
-            new("google_id", userInfo.Sub ?? ""),
-            new("google_picture", userInfo.Picture ?? ""),
-            new("google_name", userInfo.Name ?? "")
+            { "google_id", userInfo.Sub ?? string.Empty },
+            { "google_picture", userInfo.Picture ?? string.Empty },
+            { "google_name", userInfo.Name ?? string.Empty }
         };
 
-        await userManager.AddClaimsAsync(user, claims);
-        logger.LogDebug("Updated Google claims for user: {UserId}", user.Id);
+        var claimsToAdd = new List<Claim>();
+        var claimsToRemove = new List<Claim>();
+
+        foreach (var (type, newValue) in targetClaims)
+        {
+            var existingClaim = existingClaims.FirstOrDefault(c => c.Type == type);
+
+            if (existingClaim is not null)
+            {
+                // If exists but value is different, we need to replace it
+                if (!string.Equals(existingClaim.Value, newValue, StringComparison.Ordinal))
+                {
+                    claimsToRemove.Add(existingClaim);
+                    claimsToAdd.Add(new(type, newValue));
+                }
+            }
+            else
+            {
+                // If it doesn't exist, add it
+                claimsToAdd.Add(new(type, newValue));
+            }
+        }
+
+        // Execute updates only if needed to minimize DB operations
+        if (claimsToRemove.Count > 0)
+        {
+            await userManager.RemoveClaimsAsync(user, claimsToRemove);
+        }
+
+        if (claimsToAdd.Count > 0)
+        {
+            await userManager.AddClaimsAsync(user, claimsToAdd);
+        }
+
+        if (claimsToAdd.Count > 0 || claimsToRemove.Count > 0)
+        {
+            logger.LogDebug("Updated Google claims for user: {UserId}. Removed: {RemovedCount}, Added: {AddedCount}", user.Id, claimsToRemove.Count, claimsToAdd.Count);
+        }
     }
 }
