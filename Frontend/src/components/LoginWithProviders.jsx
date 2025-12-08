@@ -13,9 +13,14 @@ import LoginForm from './LoginForm';
 const GOOGLE_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID;
 
 export default function LoginWithProviders() {
+  if (!GOOGLE_CLIENT_ID) {
+    console.warn('Google Client ID not found. Google Login will be disabled.');
+    return <LoginForm enableGoogle={false} />;
+  }
+
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <LoginForm />
+      <LoginForm enableGoogle={true} />
     </GoogleOAuthProvider>
   );
 }
