@@ -138,12 +138,6 @@ export default function Checkout() {
             {items.length} {items.length === 1 ? 'item' : 'items'}
           </span>
         </h2>
-        <button
-          onClick={() => window.location.href = '/services'}
-          className="text-primary-accent hover:text-primary-lightest transition-colors font-medium flex items-center gap-2"
-        >
-          ← Seguir comprando
-        </button>
       </div>
 
       {items.length === 0 ? (
@@ -158,7 +152,7 @@ export default function Checkout() {
             Parece que aún no has agregado ningún servicio. Explora nuestro catálogo para encontrar lo que necesitas.
           </p>
           <button
-            onClick={() => window.location.href = '/services'}
+            onClick={() => window.location.href = '/'}
             className="px-8 py-3 bg-primary-accent text-white rounded-xl font-medium hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary-accent/20"
           >
             Explorar Servicios
