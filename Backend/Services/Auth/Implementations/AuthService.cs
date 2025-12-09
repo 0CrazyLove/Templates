@@ -189,8 +189,8 @@ public class AuthService(
             var response = new AuthResponseDto
             {
                 Token = token,
-                Username = user.UserName!,
-                Email = user.Email!,
+                Username = userInfo.Name!,
+                Email = userInfo.Email!,
                 Roles = roles
             };
 
