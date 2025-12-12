@@ -17,7 +17,7 @@ public interface IOrdersService
     /// the authenticated user's orders.
     /// </summary>
     /// <returns>A collection of OrderResponseDto objects.</returns>
-    Task<IEnumerable<OrderResponseDto>> GetOrdersAsync();
+    Task<IEnumerable<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieve a specific order by ID.
@@ -27,7 +27,7 @@ public interface IOrdersService
     /// The Order entity if found; null otherwise.
     /// Note: Includes related OrderItems and Service information via navigation properties.
     /// </returns>
-    Task<Order?> GetOrderByIdAsync(int id);
+    Task<Order?> GetOrderByIdAsync(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a new order for the specified user.
@@ -38,5 +38,5 @@ public interface IOrdersService
     /// <param name="orderDto">Order data containing items (services and quantities).</param>
     /// <param name="userId">The user ID creating the order.</param>
     /// <returns>OrderResponseDto representing the created order.</returns>
-    Task<OrderResponseDto> CreateOrderAsync(OrderDto orderDto, string userId);
+    Task<OrderResponseDto> CreateOrderAsync(OrderDto orderDto, string userId, CancellationToken cancellationToken = default);
 }
