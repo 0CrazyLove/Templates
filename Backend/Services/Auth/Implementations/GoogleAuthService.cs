@@ -18,13 +18,7 @@ public class GoogleAuthService(IHttpClientFactory httpClientFactory, GoogleSetti
 IConfigurationManager<OpenIdConnectConfiguration> configurationManager,
 ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoogleAuthService
 {
-    /// <summary>
-    /// Exchanges a Google authorization code for access and refresh tokens.
-    /// </summary>
-    /// <param name="code">The authorization code received from Google.</param>
-    /// <param name="cancellationToken">Cancellation token for the async operation.</param>
-    /// <returns>A DTO containing the access token, refresh token, and expiry.</returns>
-    /// <exception cref="Exception">Thrown when the token exchange fails or response is invalid.</exception>
+    /// <inheritdoc />
     public async Task<GoogleTokenDto> ExchangeCodeForTokensAsync(string code, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(code))
@@ -58,14 +52,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
         return tokenResponse ?? throw new Exception("Failed to deserialize token response from Google");
     }
 
-    /// <summary>
-    /// Decodes and validates a Google ID token using Google's public signing keys.
-    /// </summary>
-    /// <param name="idToken">The raw JWT ID token string.</param>
-    /// <param name="cancellationToken">Cancellation token for the async operation.</param>
-    /// <returns>The decoded payload containing user claims.</returns>
-    /// <exception cref="SecurityTokenException">Thrown when token validation fails (signature, issuer, audience).</exception>
-    /// <exception cref="ArgumentException">Thrown when the token is empty or null.</exception>
+    /// <inheritdoc />
     public async Task<GoogleJwtPayloadDto> DecodeAndValidateIdTokenAsync(string idToken, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(idToken))
@@ -122,11 +109,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
             Picture = picture
         };
     }
-    /// <summary>
-    /// Retrieves an existing user or creates a new one based on Google profile data.
-    /// </summary>
-    /// <param name="userInfo">The user information extracted from the Google ID token.</param>
-    /// <returns>The IdentityUser instance if found or created; otherwise, null.</returns>
+    /// <inheritdoc />
 
     public async Task<IdentityUser?> FindOrCreateGoogleUserAsync(GoogleJwtPayloadDto userInfo)
     {
@@ -174,12 +157,7 @@ ILogger<GoogleAuthService> logger, UserManager<IdentityUser> userManager) : IGoo
         return user;
     }
 
-    /// <summary>
-    /// Updates the user's claims with the latest Google profile information.
-    /// </summary>
-    /// <param name="user">The user entity to update.</param>
-    /// <param name="userInfo">The latest user information from Google.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <inheritdoc />
     public async Task UpdateGoogleClaimsAsync(IdentityUser user, GoogleJwtPayloadDto userInfo)
     {
         ArgumentNullException.ThrowIfNull(user);
