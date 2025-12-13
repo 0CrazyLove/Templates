@@ -105,8 +105,6 @@ export default function Checkout() {
       localStorage.setItem('servicehub_cart_v1', JSON.stringify([]));
       setItems([]);
 
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
     } catch (err) {
       console.error(err);
       alert('Error al crear la orden. Por favor intenta de nuevo.');
