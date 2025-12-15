@@ -28,5 +28,5 @@ public class OrderResponseDto
     /// <summary>
     /// Gets or sets the collection of order items.
     /// </summary>
-    public List<OrderItemResponseDto> OrderItems { get; set; } = [];
+    public IList<OrderItemResponseDto> OrderItems { get; set; } = [];
 }

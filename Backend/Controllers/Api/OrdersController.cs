@@ -45,7 +45,7 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
     /// </returns>
     [HttpPost]
     [Authorize(Policy = "CustomerPolicy")]
-    public async Task<ActionResult<Order>> CreateOrderAsync(OrderDto orderDto)
+    public async Task<ActionResult<OrderResponseDto>> CreateOrderAsync(OrderDto orderDto)
     {
         var newOrder = await ordersService.CreateOrderAsync(orderDto);
 

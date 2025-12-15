@@ -21,16 +21,18 @@ public class OrdersService(IOrderRepository orderRepository, IServiceRepository 
     {
         return await orderRepository.GetOrdersWithItemsAsDtoAsync(cancellationToken);
     }
-    
+
     /// <inheritdoc />
     public async Task<OrderResponseDto> CreateOrderAsync(OrderDto orderDto, CancellationToken cancellationToken = default)
     {
-        // Fetch all services in one query for efficiency
-        var serviceIds = orderDto.OrderItems.Select(i => i.ServiceId).ToList();
+        var serviceIds = orderDto.OrderItems.Select(i => i.ServiceId);
+
         var servicesList = await serviceRepository.GetByIdsAsync(serviceIds, cancellationToken);
+
         var services = servicesList.ToDictionary(s => s.Id);
+
         var userId = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
+
         var newOrder = new Order
         {
             UserId = userId,
@@ -43,8 +45,7 @@ public class OrdersService(IOrderRepository orderRepository, IServiceRepository 
         // Add order items, validating service availability
         foreach (var itemDto in orderDto.OrderItems)
         {
-            if (services.TryGetValue(itemDto.ServiceId, out var service) &&
-                service.Available)
+            if (services.TryGetValue(itemDto.ServiceId, out var service) && service.Available)
             {
                 var orderItem = new OrderItem
                 {
@@ -59,10 +60,11 @@ public class OrdersService(IOrderRepository orderRepository, IServiceRepository 
         }
 
         newOrder.TotalAmount = totalAmount;
-        await orderRepository.AddAsync(newOrder,cancellationToken);
+
+        await orderRepository.AddAsync(newOrder, cancellationToken);
+        
         await orderRepository.SaveChangesAsync(cancellationToken);
 
-        // Transform to DTO for response
         var response = new OrderResponseDto
         {
             Id = newOrder.Id,
