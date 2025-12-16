@@ -51,8 +51,8 @@ public class ServiceRepository(AppDbContext context) : Repository<Service>(conte
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Service>> GetByIdsAsync(IEnumerable<int> ids,CancellationToken cancellationToken = default)
+    public async Task<IList<Service>> GetByIdsAsync(IEnumerable<int> ids,CancellationToken cancellationToken = default)
     {
-        return await _dbSet.Where(s => ids.Contains(s.Id)).ToListAsync(cancellationToken);
+        return await _dbSet.AsNoTracking().Where(s => ids.Contains(s.Id)).ToListAsync(cancellationToken);
     }
 }

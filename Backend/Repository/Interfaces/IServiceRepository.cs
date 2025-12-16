@@ -37,5 +37,5 @@ public interface IServiceRepository : IRepository<Service>
     /// </summary>
     /// <param name="ids">The collection of service IDs to retrieve.</param>
     /// <returns>A collection of services matching the provided IDs.</returns>
-    Task<IEnumerable<Service>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default);
+    Task<IList<Service>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default);
 }

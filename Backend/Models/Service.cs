@@ -107,7 +107,7 @@ public class Service
     public bool Verified { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets whether the service is currently available for purchase.
+    /// Gets and sets whether the service is currently available for purchase.
     /// Allows vendors to temporarily disable services without deletion.
     /// </summary>
     public bool Available { get; set; } = true;
