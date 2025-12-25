@@ -112,5 +112,5 @@ public class ServiceDto
     /// Examples: ["Spanish", "English", "French"]
     /// Will be serialized to JSON format in the database.
     /// </summary>
-    public List<string> Languages { get; set; } = new();
+    public IList<string> Languages { get; set; } = [];
 }

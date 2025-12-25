@@ -7,12 +7,12 @@ namespace Backend.DTOs.Services;
 /// Used when retrieving services with filtering and sorting to provide
 /// the client with navigation information for multi-page results.
 /// </summary>
-public class PaginatedServicesDto
+public class PaginatedServicesResponseDto
 {
     /// <summary>
     /// Gets or sets the collection of services in the current page.
     /// </summary>
-    public List<ServiceResponseDto> Items { get; set; } = [];
+    public IList<ServiceResponseDto> Items { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the total number of available pages.

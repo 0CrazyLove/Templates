@@ -18,7 +18,7 @@ public class ServiceResponseDto
     /// <summary>
     /// Gets or sets the name of the service.
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the detailed description of the service.
@@ -33,7 +33,7 @@ public class ServiceResponseDto
     /// <summary>
     /// Gets or sets the pricing model type (project, hour, month, etc.).
     /// </summary>
-    public string PriceType { get; set; } = string.Empty;
+    public string? PriceType { get; set; }
 
     /// <summary>
     /// Gets or sets the category for filtering and discovery.
@@ -43,7 +43,7 @@ public class ServiceResponseDto
     /// <summary>
     /// Gets or sets the vendor or provider name.
     /// </summary>
-    public string Provider { get; set; } = string.Empty;
+    public string? Provider { get; set; }
 
     /// <summary>
     /// Gets or sets the average rating on a 0-5 scale.
@@ -63,7 +63,7 @@ public class ServiceResponseDto
     /// <summary>
     /// Gets or sets the expected delivery timeframe.
     /// </summary>
-    public string DeliveryTime { get; set; } = string.Empty;
+    public string? DeliveryTime { get; set; }
 
     /// <summary>
     /// Gets or sets the URL to the service image or thumbnail.
@@ -83,7 +83,7 @@ public class ServiceResponseDto
     /// <summary>
     /// Gets or sets the list of supported languages.
     /// </summary>
-    public List<string> Languages { get; set; } = [];
+    public IList<string> Languages { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the UTC timestamp when the service was created.
