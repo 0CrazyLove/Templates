@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 namespace Backend.DTOs.Orders;
 
 /// <summary>
@@ -28,5 +29,6 @@ public class OrderItemResponseDto
     /// <summary>
     /// Gets or sets the unit price at purchase time.
     /// </summary>
+    [Precision(18, 2)]
     public decimal Price { get; set; }
 }
