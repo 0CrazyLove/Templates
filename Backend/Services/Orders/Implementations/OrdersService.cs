@@ -1,3 +1,4 @@
+using AutoMapper;
 using Backend.DTOs.Orders;
 using Backend.Models;
 using Backend.Services.Orders.Interfaces;
@@ -14,12 +15,13 @@ namespace Backend.Services.Orders.Implementations;
 /// </summary>
 /// <param name="orderRepository">The repository for accessing order data.</param>
 /// <param name="serviceRepository">The repository for accessing service data.</param>
-public class OrdersService(IOrderRepository orderRepository, IServiceRepository serviceRepository, IHttpContextAccessor httpContextAccessor) : IOrdersService
+/// <param name="mapper">The AutoMapper instance for object mapping.</param>
+public class OrdersService(IOrderRepository orderRepository, IServiceRepository serviceRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper) : IOrdersService
 {
     /// <inheritdoc />
-    public async Task<IEnumerable<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default)
+    public async Task<IList<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default)
     {
-        return await orderRepository.GetOrdersWithItemsAsDtoAsync(cancellationToken);
+        return await orderRepository.GetOrdersAsync(cancellationToken);
     }
 
     /// <inheritdoc />
@@ -51,7 +53,8 @@ public class OrdersService(IOrderRepository orderRepository, IServiceRepository 
                 {
                     ServiceId = service.Id,
                     Quantity = itemDto.Quantity,
-                    Price = service.Price
+                    Price = service.Price,
+                    Service = service // Set navigation property for AutoMapper
                 };
 
                 newOrder.OrderItems.Add(orderItem);
@@ -62,25 +65,9 @@ public class OrdersService(IOrderRepository orderRepository, IServiceRepository 
         newOrder.TotalAmount = totalAmount;
 
         await orderRepository.AddAsync(newOrder, cancellationToken);
-        
+
         await orderRepository.SaveChangesAsync(cancellationToken);
 
-        var response = new OrderResponseDto
-        {
-            Id = newOrder.Id,
-            UserId = newOrder.UserId,
-            OrderDate = newOrder.OrderDate,
-            TotalAmount = newOrder.TotalAmount,
-            OrderItems = [..newOrder.OrderItems.Select(oi => new OrderItemResponseDto
-            {
-                Id = oi.Id,
-                ServiceId = oi.ServiceId,
-                ServiceName = services[oi.ServiceId].Name,
-                Quantity = oi.Quantity,
-                Price = oi.Price
-            })]
-        };
-
-        return response;
+        return mapper.Map<OrderResponseDto>(newOrder);
     }
 }

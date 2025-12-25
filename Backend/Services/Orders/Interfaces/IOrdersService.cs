@@ -1,5 +1,4 @@
 using Backend.DTOs.Orders;
-using Backend.Models;
 
 namespace Backend.Services.Orders.Interfaces;
 
@@ -17,7 +16,7 @@ public interface IOrdersService
     /// the authenticated user's orders.
     /// </summary>
     /// <returns>A collection of OrderResponseDto objects.</returns>
-    Task<IEnumerable<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default);
+    Task<IList<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a new order for the specified user.

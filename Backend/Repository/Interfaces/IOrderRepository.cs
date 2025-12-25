@@ -12,7 +12,7 @@ public interface IOrderRepository : IRepository<Order>
     /// Retrieves all orders including their associated items and services.
     /// </summary>
     /// <returns>A collection of orders with full details.</returns>
-    Task<IEnumerable<OrderResponseDto>> GetOrdersWithItemsAsDtoAsync(CancellationToken cancellationToken = default);
+    Task<IList<OrderResponseDto>> GetOrdersAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Calculates the total sales amount from all orders.
