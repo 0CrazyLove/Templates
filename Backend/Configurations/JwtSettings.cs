@@ -36,10 +36,4 @@ public class JwtSettings
     /// Retrieved from the JWT_EXPIRATION_MINUTES environment variable.
     /// </summary>
     public int ExpirationMinutes { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JwtSettings"/> class.
-    /// Loads JWT configuration values from environment variables.
-    /// </summary>
-
 }
