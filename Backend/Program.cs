@@ -13,6 +13,7 @@ using Backend.Extensions;
 using DotNetEnv;
 using System.Diagnostics;
 using Backend.Configurations;
+using Backend.Data;
 
 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
@@ -36,6 +37,7 @@ var app = builder.Build();
 
 // Seed database on startup
 await app.SeedDatabaseAsync();
+await app.ApplyMigrations<AppDbContext>();
 
 // Configure middleware pipeline
 app.UseCors("AllowFrontend");
