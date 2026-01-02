@@ -35,12 +35,18 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
 // Seed database on startup
 await app.SeedDatabaseAsync();
 await app.ApplyMigrations<AppDbContext>();
 
 // Configure middleware pipeline
 app.UseGlobalMiddleware();
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

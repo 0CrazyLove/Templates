@@ -11,16 +11,15 @@ public static class CorsExtensions
     /// </summary>
     /// <param name="services">The service collection to add CORS to.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
+    public static void AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins("http://localhost:4321").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                policy.WithOrigins("http://localhost:4321", "https://localhost:4321").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             });
         });
 
-        return services;
     }
 }
