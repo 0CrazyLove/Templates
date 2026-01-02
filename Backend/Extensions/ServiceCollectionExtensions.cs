@@ -11,6 +11,7 @@ using Backend.Services.Database.Implementations;
 using Backend.Services.Database.Interfaces;
 using Backend.Repository.Interfaces;
 using Backend.Repository.Implementations;
+using Backend.Middlewares;
 
 namespace Backend.Extensions;
 
@@ -45,12 +46,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
         // AutoMapper
-        services.AddAutoMapper(cfg => {}, typeof(Program));
+        services.AddAutoMapper(cfg => { }, typeof(Program));
 
         // Configuration settings
         services.AddSingleton<JwtSettings>();
         services.AddSingleton<GoogleSettings>();
-        
+
+        // Adds global middleware services.
+        services.AddTransient<GlobalExceptionMiddleware>();
+        services.AddTransient<RequestLoggingMiddleware>();
+
         return services;
     }
 }

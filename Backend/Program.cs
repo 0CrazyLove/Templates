@@ -40,6 +40,7 @@ await app.SeedDatabaseAsync();
 await app.ApplyMigrations<AppDbContext>();
 
 // Configure middleware pipeline
+app.UseGlobalMiddleware();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

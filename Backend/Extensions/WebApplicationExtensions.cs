@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Backend.Services.Database.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Backend.Middlewares;
 
 namespace Backend.Extensions;
 
@@ -74,5 +75,11 @@ public static class WebApplicationExtensions
             logger.LogError(ex, "Logger - CorrelationId: {CorrelationId} - An error occurred during database seeding.", correlationId);
             throw;
         }
+    }
+    public static void UseGlobalMiddleware(this WebApplication app)
+    {
+        app.UseMiddleware<GlobalExceptionMiddleware>();
+
+        app.UseMiddleware<RequestLoggingMiddleware>();
     }
 }
