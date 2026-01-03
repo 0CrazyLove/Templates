@@ -12,7 +12,9 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from "@astrojs/tailwind";
-import node from '@astrojs/node'; 
+import node from '@astrojs/node';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 export default defineConfig({
   integrations: [react(), tailwind()],
@@ -20,4 +22,12 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone'
   }),
+  vite: {
+    server: {
+      https: {
+        key: readFileSync(resolve('.certs/key.pem')),
+        cert: readFileSync(resolve('.certs/cert.pem')),
+      }
+    }
+  }
 });

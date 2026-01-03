@@ -8,7 +8,7 @@
  * API Base URL: http://localhost:5097/api
  */
 
-const API_URL = 'http://localhost:5097/api';
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
 /**
  * Handle API responses and throw errors if the response is not successful.

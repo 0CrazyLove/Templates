@@ -5,6 +5,11 @@
 
 # dotenv files
 .env
+.env.production
+.env.development
+
+# Local development certificates
+.certs
 
 # User-specific files
 *.rsuser
@@ -20,6 +25,7 @@
 mono_crash.*
 
 # Build results
+dist
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
