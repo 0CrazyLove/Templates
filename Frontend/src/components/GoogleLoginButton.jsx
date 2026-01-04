@@ -18,8 +18,6 @@ export default function GoogleLoginButton({ onSuccess, onError, loading }) {
         onSuccess: onSuccess,
         onError: onError,
         scope: 'openid email profile',
-        access_type: 'offline',
-        prompt: 'consent'
     });
 
     return (
