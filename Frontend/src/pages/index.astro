@@ -7,14 +7,20 @@
  */
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.jsx";
-import Hero from "../components/Hero.jsx";
-import Products from "../components/Service.jsx";
+import HeroMinimal from "../components/HeroMinimal.jsx";
+import Stats from "../components/Stats.jsx";
+import Categories from "../components/Categories.jsx";
+import Features from "../components/Features.jsx";
+import CallToAction from "../components/CallToAction.jsx";
 import Footer from "../components/Footer.jsx";
 ---
 
 <Layout>
   <Header client:load />
-  <Hero client:load />
-  <Products client:load />
+  <HeroMinimal client:load />
+  <Stats client:load />
+  <Categories client:load />
+  <Features client:load />
+  <CallToAction client:load />
   <Footer client:load />
 </Layout>
