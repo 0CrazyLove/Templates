@@ -24,7 +24,7 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
     /// </summary>
     /// <returns>A collection of OrderResponseDto objects representing all orders.</returns>
     [HttpGet]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<ActionResult<IList<Order>>> GetOrdersAsync()
     {
         var orders = await ordersService.GetOrdersAsync();
