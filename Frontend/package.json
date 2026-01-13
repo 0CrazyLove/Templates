@@ -11,12 +11,19 @@
   "dependencies": {
     "@astrojs/node": "^9.5.1",
     "@astrojs/react": "^4.4.2",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "@react-oauth/google": "^0.12.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "astro": "^5.15.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.24.0",
+    "lucide-react": "^0.562.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^5.1.0",

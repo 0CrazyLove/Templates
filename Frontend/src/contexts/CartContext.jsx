@@ -49,6 +49,8 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      // Dispatch storage event so other components (like CartIcon) can update
+      window.dispatchEvent(new Event('storage'));
     } catch (e) {
       console.error('Error saving cart to localStorage:', e);
     }

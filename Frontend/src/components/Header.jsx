@@ -16,7 +16,11 @@ export default function Header() {
   const { user, isAuthenticated, logout, mounted } = useAuth();
   const [showAdmin, setShowAdmin] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const menuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   /**
    * Handle user logout and redirect to home page.
@@ -121,23 +125,51 @@ export default function Header() {
   };
 
   /**
-   * Close profile menu when clicking outside.
+   * Close menus when clicking outside.
    */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowProfileMenu(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target) && !event.target.closest('button[aria-label="Toggle mobile menu"]')) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
-    if (showProfileMenu) {
+    if (showProfileMenu || isMobileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showProfileMenu]);
+  }, [showProfileMenu, isMobileMenuOpen]);
+
+  /**
+   * Handle scroll behavior to hide/show navbar.
+   */
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) { // if scroll down and past 100px
+          setIsVisible(false);
+        } else { // if scroll up
+          setIsVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+
+      // cleanup function
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   /**
      * Skeleton/placeholder header while component hydrates on client.
@@ -146,38 +178,29 @@ export default function Header() {
      */
   if (!mounted) {
     return (
-      <header className="bg-primary-dark shadow-md">
-        <div className="px-4 py-4 flex items-center gap-8">
-          <a
-            href="/"
-            className="text-2xl font-bold text-primary-lightest hover:text-primary-accent"
-          >
-            ServiceHub
-          </a>
-          <nav className="flex gap-1">
-            <a
-              href="/"
-              className="text-primary-light hover:text-primary-lightest px-3 py-2"
-            >
-              Inicio
-            </a>
-            <a
-              href="#"
-              className="text-primary-light hover:text-primary-lightest px-3 py-2"
-            >
-              Servicios
-            </a>
-            <a
-              href="#"
-              className="text-primary-light hover:text-primary-lightest px-3 py-2"
-            >
-              Acerca de
-            </a>
-          </nav>
-          <div className="flex items-center gap-3 ml-auto">
-            <div className="w-6 h-6"></div>
-            {/* Loading placeholder - prevents flash of login/register buttons */}
-            <div className="w-10 h-10 rounded-full bg-primary-light/20 animate-pulse"></div>
+      <header className="sticky top-0 z-50 bg-primary-dark/80 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <a
+                href="/"
+                className="text-2xl font-bold bg-gradient-to-r from-primary-lightest to-primary-light bg-clip-text text-transparent"
+              >
+                ServiceHub
+              </a>
+            </div>
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <div className="h-4 w-20 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-4 w-20 bg-white/10 rounded animate-pulse"></div>
+                <div className="h-4 w-20 bg-white/10 rounded animate-pulse"></div>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className="ml-4 flex items-center md:ml-6">
+                <div className="h-8 w-8 bg-white/10 rounded-full animate-pulse"></div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -188,161 +211,236 @@ export default function Header() {
    * Fully mounted header with interactive elements and user state.
    */
   return (
-    <header className="bg-primary-dark shadow-md">
-      <div className="px-4 py-4 flex items-center gap-8">
-        {/* Logo */}
-        <a
-          href="/"
-          className="text-2xl font-bold text-primary-lightest hover:text-primary-accent"
-        >
-          ServiceHub
-        </a>
-        {/* Main navigation */}
-        <nav className="flex gap-1">
-          <a
-            href="/"
-            className="text-primary-light hover:text-primary-lightest px-3 py-2"
-          >
-            Inicio
-          </a>
-          <a
-            href="#"
-            className="text-primary-light hover:text-primary-lightest px-3 py-2"
-          >
-            Servicios
-          </a>
-          <a
-            href="#"
-            className="text-primary-light hover:text-primary-lightest px-3 py-2"
-          >
-            Acerca de
-          </a>
-          {showAdmin && (
+    <header className={`sticky top-0 z-50 bg-primary-dark border-b border-white/5 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+
+          {/* Logo */}
+          <div className="flex-shrink-0">
             <a
-              href="/dashboard"
-              className="text-primary-light hover:text-primary-lightest px-3 py-2"
+              href="/"
+              className="text-2xl font-bold bg-gradient-to-r from-primary-lightest to-primary-light bg-clip-text text-transparent hover:opacity-80 transition-opacity"
             >
-              Panel
+              ServiceHub
             </a>
-          )}
-        </nav>
-
-        {/* Search Bar */}
-        <div className="flex-1 max-w-8xl mx-4 hidden md:block">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Buscar servicios..."
-              className="w-full bg-primary-medium/30 text-primary-lightest placeholder-primary-light/50 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-primary-accent border border-primary-light/10 transition-all focus:bg-primary-medium/50"
-            />
-            <svg
-              className="w-4 h-4 text-primary-light/50 absolute left-3.5 top-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
           </div>
-        </div>
-        {/* Right side: cart and auth */}
-        <div className="flex items-center gap-3 ml-auto">
-          <CartIcon />
-          {isAuthenticated ? (
-            <div className="relative" ref={menuRef}>
-              {/* Profile button */}
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center gap-2 hover:opacity-80 transition focus:outline-none focus:ring-2 focus:ring-primary-accent rounded-full"
-                aria-label="Open profile menu"
-              >
-                {user?.picture ? (
-                  <img
-                    src={user.picture}
-                    alt={getDisplayName()}
-                    className="w-10 h-10 rounded-full border-2 border-primary-accent object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-primary-accent flex items-center justify-center text-primary-lightest font-bold text-lg">
-                    {getDisplayName().charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </button>
 
-              {/* Dropdown profile menu */}
-              {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-primary-dark border border-primary-light/20 rounded-lg shadow-xl z-50 overflow-hidden">
-                  {/* Menu header with user info */}
-                  <div className="bg-primary-darker p-4 border-b border-primary-light/10">
-                    <div className="flex items-center gap-3">
-                      {user?.picture ? (
-                        <img
-                          src={user.picture}
-                          alt={getDisplayName()}
-                          className="w-12 h-12 rounded-full border-2 border-primary-accent object-cover"
-                          referrerPolicy="no-referrer"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-primary-accent flex items-center justify-center text-primary-lightest font-bold text-xl">
-                          {getDisplayName().charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-primary-lightest font-semibold truncate">
-                          {getDisplayName()}
-                        </p>
-                        <p className="text-primary-light text-sm truncate">
-                          {getEmail()}
-                        </p>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-8">
+              <a
+                href="/"
+                className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              >
+                Inicio
+              </a>
+              <a
+                href="/services"
+                className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              >
+                Servicios
+              </a>
+              <a
+                href="/about"
+                className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              >
+                Acerca de
+              </a>
+              {showAdmin && (
+                <a
+                  href="/dashboard"
+                  className="text-primary-accent hover:text-primary-lightest px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  Panel Admin
+                </a>
+              )}
+            </div>
+          </nav>
+
+          {/* Right Side Icons & Profile */}
+          <div className="hidden md:block">
+            <div className="ml-4 flex items-center md:ml-6 gap-4">
+              <CartIcon />
+
+              {isAuthenticated ? (
+                <div className="relative" ref={menuRef}>
+                  <button
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                    className="flex items-center max-w-xs rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-dark focus:ring-white transition-transform active:scale-95"
+                    aria-label="Open profile menu"
+                  >
+                    {user?.picture ? (
+                      <img
+                        src={user.picture}
+                        alt={getDisplayName()}
+                        className="h-8 w-8 rounded-full object-cover border border-white/10"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary-accent to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                        {getDisplayName().charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Profile Dropdown */}
+                  {showProfileMenu && (
+                    <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-primary-dark border border-white/10 ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden transform transition-all duration-200 ease-out">
+                      <div className="px-4 py-3 border-b border-white/5 bg-white/5">
+                        <p className="text-sm text-white font-medium truncate">{getDisplayName()}</p>
+                        <p className="text-xs text-gray-400 truncate">{getEmail()}</p>
+                      </div>
+                      <div className="py-1 border-t border-white/5">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                        >
+                          Cerrar Sesión
+                        </button>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Menu options */}
-                  <div className="py-2">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-primary-light hover:bg-primary-darker hover:text-primary-lightest transition flex items-center gap-2"
-                      aria-label="Cerrar sesión"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
-                      Cerrar sesión
-                    </button>
-                  </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <a
+                    href="/login"
+                    className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
+                  >
+                    Iniciar Sesión
+                  </a>
+                  <a
+                    href="/registro"
+                    className="bg-primary-accent hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-lg shadow-primary-accent/20 hover:shadow-primary-accent/40"
+                  >
+                    Registrarse
+                  </a>
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="-mr-2 flex md:hidden">
+            <div className="flex items-center gap-4 mr-4">
+              <CartIcon />
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              type="button"
+              className="bg-white/5 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+              aria-label="Toggle mobile menu"
+            >
+              <span className="sr-only">Open main menu</span>
+              {!isMobileMenuOpen ? (
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              ) : (
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-primary-dark border-b border-white/5" id="mobile-menu" ref={mobileMenuRef}>
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a
+              href="/"
+              className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
+            >
+              Inicio
+            </a>
+            <a
+              href="/services"
+              className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
+            >
+              Servicios
+            </a>
+            <a
+              href="/about"
+              className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
+            >
+              Acerca de
+            </a>
+            {showAdmin && (
+              <a
+                href="/dashboard"
+                className="text-primary-accent hover:bg-primary-accent/10 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+              >
+                Panel Admin
+              </a>
+            )}
+          </div>
+
+          {isAuthenticated ? (
+            <div className="pt-4 pb-4 border-t border-white/10">
+              <div className="flex items-center px-5">
+                <div className="flex-shrink-0">
+                  {user?.picture ? (
+                    <img
+                      className="h-10 w-10 rounded-full object-cover border border-white/10"
+                      src={user.picture}
+                      alt={getDisplayName()}
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary-accent to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                      {getDisplayName().charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div className="ml-3">
+                  <div className="text-base font-medium leading-none text-white">{getDisplayName()}</div>
+                  <div className="text-sm font-medium leading-none text-gray-400 mt-1">{getEmail()}</div>
+                </div>
+              </div>
+              <div className="mt-3 px-2 space-y-1">
+                <a
+                  href="/profile"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                >
+                  Mi Perfil
+                </a>
+                <a
+                  href="/orders"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                >
+                  Mis Pedidos
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
           ) : (
-            <>
+            <div className="pt-4 pb-4 border-t border-white/10 px-5 space-y-3">
               <a
                 href="/login"
-                className="text-primary-light hover:text-primary-lightest px-3 py-2"
+                className="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-white/10 hover:bg-white/20 transition-colors"
               >
-                Iniciar sesión
+                Iniciar Sesión
               </a>
               <a
                 href="/registro"
-                className="bg-primary-accent hover:bg-opacity-80 text-white px-4 py-2 rounded-md transition"
+                className="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary-accent hover:bg-opacity-90 transition-colors"
               >
                 Registrarse
               </a>
-            </>
+            </div>
           )}
         </div>
-      </div>
+      )}
     </header>
   );
 }

@@ -344,14 +344,11 @@ export async function getDashboardStats(token) {
  * 
  * Requires authentication. Returns list of orders with associated items and services.
  * 
- * @param {string} token - JWT authentication token
  * @returns {Promise<Array<Object>>} Array of order objects
  */
-export async function getOrders(token) {
+export async function getOrders() {
   try {
-    return await fetchWithAuth(`${API_URL}/orders`, {
-      method: 'GET'
-    }, token);
+    return await fetchWithAuth(`${API_URL}/orders`);
   } catch (error) {
     console.error('Error fetching orders:', error);
     throw error;

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth.js';
 import { getDashboardStats, getOrders, getServices } from '../../Services/api.js';
+import { Plus } from 'lucide-react';
+import CreateServiceModal from './CreateServiceModal.jsx';
 
 
 /**
@@ -26,6 +28,38 @@ export default function Dashboard() {
     categoryStats: [],
     allOrders: []
   });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const loadDashboardData = async () => {
+    if (!isAuthenticated) {
+      setError('Debes iniciar sesión con una cuenta de administrador para ver el panel.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch basic stats, orders, and services in parallel
+      const [basicStats, ordersData, servicesData] = await Promise.all([
+        getDashboardStats(token),
+        getOrders(token),
+        getServices({ pageSize: 1000 }) // Fetch all services to map categories
+      ]);
+
+      setStats(basicStats);
+
+      // Process data for extended statistics
+      processExtendedStats(ordersData, servicesData.items || []);
+
+    } catch (err) {
+      console.error(err);
+      setError('No se pudieron cargar las estadísticas. Comprueba que tu sesión tenga permisos de administrador.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /**
    * Load dashboard statistics from API when component mounts.
@@ -33,39 +67,9 @@ export default function Dashboard() {
   useEffect(() => {
     if (!mounted) return; // Wait for hook to mount
 
-    const load = async () => {
-      if (!isAuthenticated) {
-        setError('Debes iniciar sesión con una cuenta de administrador para ver el panel.');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch basic stats, orders, and services in parallel
-        const [basicStats, ordersData, servicesData] = await Promise.all([
-          getDashboardStats(token),
-          getOrders(token),
-          getServices({ pageSize: 1000 }) // Fetch all services to map categories
-        ]);
-
-        setStats(basicStats);
-
-        // Process data for extended statistics
-        processExtendedStats(ordersData, servicesData.items || []);
-
-      } catch (err) {
-        console.error(err);
-        setError('No se pudieron cargar las estadísticas. Comprueba que tu sesión tenga permisos de administrador.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
+    loadDashboardData();
   }, [token, isAuthenticated, mounted]);
+
 
   const processExtendedStats = (orders, services) => {
     // Create a map of ServiceId -> Service Details for quick lookup
@@ -160,9 +164,24 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <h2 className="text-3xl font-bold text-primary-lightest mb-6">
-        Panel de Control
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-primary-lightest">
+          Panel de Control
+        </h2>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="bg-primary-accent hover:bg-primary-accent/90 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-lg shadow-primary-accent/20"
+        >
+          <Plus size={20} />
+          <span>Crear Servicio</span>
+        </button>
+      </div>
+
+      <CreateServiceModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onServiceCreated={loadDashboardData}
+      />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
