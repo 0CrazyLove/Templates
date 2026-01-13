@@ -1,30 +1,14 @@
 ---
 /**
  * Login page.
- * 
+ *
  * Displays authentication options including email/password login
- * and OAuth provider options. Centered layout with hero background.
+ * and OAuth provider options. Two-column layout with promotional section.
  */
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.jsx';
-import LoginWithProviders from '../components/LoginWithProviders.jsx';
-import Footer from '../components/Footer.jsx';
+import Layout from "../layouts/Layout.astro";
+import LoginWithProviders from "../components/LoginWithProviders.jsx";
 ---
 
 <Layout>
-  <Header client:load />
-  <main class="flex-grow py-20 bg-primary-darkest">
-    <div class="container mx-auto px-4">
-      <div class="max-w-2xl mx-auto">
-        <h1 class="text-4xl font-bold text-primary-lightest mb-4 text-center">
-          Welcome to ServiceHub
-        </h1>
-        <p class="text-primary-light text-center mb-12">
-          Login to access all our services
-        </p>
-        <LoginWithProviders client:load />
-      </div>
-    </div>
-  </main>
-  <Footer client:load />
+  <LoginWithProviders client:load />
 </Layout>

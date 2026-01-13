@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import LoginForm from './LoginForm';
+import Login from './Login';
 
 /**
  * Login wrapper component with OAuth provider setup.
@@ -15,12 +15,12 @@ const GOOGLE_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID;
 export default function LoginWithProviders() {
   if (!GOOGLE_CLIENT_ID) {
     console.warn('Google Client ID not found. Google Login will be disabled.');
-    return <LoginForm enableGoogle={false} />;
+    return <Login enableGoogle={false} />;
   }
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <LoginForm enableGoogle={true} />
+      <Login />
     </GoogleOAuthProvider>
   );
 }
