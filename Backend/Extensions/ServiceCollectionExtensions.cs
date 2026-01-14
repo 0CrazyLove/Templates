@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
         // Configuration settings
         services.AddSingleton<JwtSettings>();
         services.AddSingleton<GoogleSettings>();
+        services.AddSingleton<AdminCredentials>();
 
         // Adds global middleware services.
         services.AddTransient<GlobalExceptionMiddleware>();

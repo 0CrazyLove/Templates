@@ -6,10 +6,12 @@
 using Microsoft.AspNetCore.Identity;
 using Backend.Services.Database.Interfaces;
 using System.Diagnostics;
+using Backend.Configurations;
 
 namespace Backend.Services.Database.Implementations;
 
-public class DatabaseSeeder(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<DatabaseSeeder> logger, IHttpContextAccessor httpContextAccessor) : IDatabaseSeeder
+public class DatabaseSeeder(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<DatabaseSeeder> logger,
+ IHttpContextAccessor httpContextAccessor, AdminCredentials adminCredentials) : IDatabaseSeeder
 {
     /// <inheritdoc />
     public async Task SeedAsync()
@@ -62,25 +64,47 @@ public class DatabaseSeeder(UserManager<IdentityUser> userManager, RoleManager<I
 
         try
         {
-            var adminEmail = "admin@example.com";
+            var adminEmail = adminCredentials.Email;
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                logger.LogInformation("Created role Admin. CorrelationId: {CorrelationId}", correlationId);
+            }
 
             if (adminUser is null)
             {
                 adminUser = new IdentityUser
                 {
-                    UserName = "admin",
+                    UserName = adminCredentials.Username,
                     Email = adminEmail,
                     EmailConfirmed = true
                 };
 
-                await userManager.CreateAsync(adminUser, "Admin123!");
+                await userManager.CreateAsync(adminUser, adminCredentials.Password);
                 await userManager.AddToRoleAsync(adminUser, "Admin");
                 logger.LogInformation("Created admin user: {Email}. CorrelationId: {CorrelationId}", adminEmail, correlationId);
             }
             else
             {
-                logger.LogDebug("Admin user already exists. CorrelationId: {CorrelationId}", correlationId);
+                if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    logger.LogInformation("Added existing admin user to Admin role. CorrelationId: {CorrelationId}", correlationId);
+                }
+                var token = await userManager.GeneratePasswordResetTokenAsync(adminUser);
+                var result = await userManager.ResetPasswordAsync(adminUser, token, adminCredentials.Password);
+
+                if (result.Succeeded)
+                {
+                    logger.LogInformation("Updated admin password. CorrelationId: {CorrelationId}", correlationId);
+                }
+                else
+                {
+                    logger.LogWarning("Failed to update admin password: {Errors}. CorrelationId: {CorrelationId}",
+                    string.Join(", ", result.Errors.Select(e => e.Description)), correlationId);
+                }
             }
         }
         catch (Exception ex)
