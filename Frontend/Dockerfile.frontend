@@ -15,10 +15,16 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
-# Accept build argument for Google Client ID
+# Accept build arguments
 ARG PUBLIC_GOOGLE_CLIENT_ID
+ARG PUBLIC_API_URL
+
 # Set as environment variable for the build process
 ENV PUBLIC_GOOGLE_CLIENT_ID=$PUBLIC_GOOGLE_CLIENT_ID
+ENV PUBLIC_API_URL=$PUBLIC_API_URL
+
+# Use Docker-specific config for build
+RUN cp astro.config.docker.mjs astro.config.mjs
 
 # Build the Astro application
 RUN pnpm run build

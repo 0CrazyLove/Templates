@@ -28,7 +28,7 @@ services:
     container_name: servicehub_backend
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ASPNETCORE_URLS: http://+:5097
+      ASPNETCORE_URLS: "${ASPNETCORE_URLS}"
       CONNECTION_STRING: "Server=database;Database=AppDB;User Id=${DB_USER};Password=${DB_PASSWORD};Encrypt=false;TrustServerCertificate=true;"
       JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
       JWT_ISSUER: "${JWT_ISSUER}"
@@ -37,6 +37,9 @@ services:
       GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
       GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
       GOOGLE_REDIRECT_URI: "${GOOGLE_REDIRECT_URI}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      ADMIN_USERNAME: "${ADMIN_USERNAME}"
     ports:
       - "5097:5097"
     depends_on:
@@ -45,9 +48,9 @@ services:
     networks:
       - servicehub_network
 
-    restart: unless-stopped
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5097/health"]
+      test: ["CMD", "curl", "-k", "-f", "${BACKEND_HEALTH_CHECK_URL}"]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -60,9 +63,12 @@ services:
       dockerfile: Dockerfile.frontend
       args:
         PUBLIC_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+        PUBLIC_API_URL: ${PUBLIC_API_URL}
     container_name: servicehub_frontend
     environment:
-      - NODE_ENV=production
+     - NODE_ENV=production
+     - PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+     - PUBLIC_API_URL=${PUBLIC_API_URL}
     ports:
       - "4321:4321"
     depends_on:
@@ -70,9 +76,9 @@ services:
         condition: service_healthy
     networks:
       - servicehub_network
-    restart: unless-stopped
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4321/"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "${FRONTEND_HEALTH_CHECK_URL}"]
       interval: 30s
       timeout: 3s
       retries: 5
