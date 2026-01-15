@@ -41,8 +41,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 // Seed database on startup
-await app.SeedDatabaseAsync();
 await app.ApplyMigrations<AppDbContext>();
+await app.SeedDatabaseAsync();
 
 // Configure middleware pipeline
 app.UseGlobalMiddleware();
