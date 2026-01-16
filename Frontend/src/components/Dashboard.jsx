@@ -32,7 +32,7 @@ export default function Dashboard() {
 
   const loadDashboardData = async () => {
     if (!isAuthenticated) {
-      setError('Debes iniciar sesión con una cuenta de administrador para ver el panel.');
+      setError('You must log in with an administrator account to view the dashboard.');
       setLoading(false);
       return;
     }
@@ -55,7 +55,7 @@ export default function Dashboard() {
 
     } catch (err) {
       console.error(err);
-      setError('No se pudieron cargar las estadísticas. Comprueba que tu sesión tenga permisos de administrador.');
+      setError('Could not load statistics. Check that your session has administrator permissions.');
     } finally {
       setLoading(false);
     }
@@ -86,8 +86,8 @@ export default function Dashboard() {
         return {
           ...item,
           serviceImage: service ? service.imageUrl : null,
-          category: service ? service.category : 'Otros',
-          serviceName: item.serviceName || (service ? service.name : 'Servicio Desconocido')
+          category: service ? service.category : 'Others',
+          serviceName: item.serviceName || (service ? service.name : 'Unknown Service')
         };
       });
       return { ...order, orderItems: enrichedItems };
@@ -151,7 +151,7 @@ export default function Dashboard() {
         </div>
         <div className="mt-4">
           <a href="/login" className="text-primary-accent underline">
-            Ir a iniciar sesión
+            Go to login
           </a>
         </div>
       </div>
@@ -166,14 +166,14 @@ export default function Dashboard() {
     <div className="container mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-primary-lightest">
-          Panel de Control
+          Dashboard
         </h2>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="bg-primary-accent hover:bg-primary-accent/90 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-lg shadow-primary-accent/20"
         >
           <Plus size={20} />
-          <span>Crear Servicio</span>
+          <span>Create Service</span>
         </button>
       </div>
 
@@ -186,21 +186,21 @@ export default function Dashboard() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium">
-          <p className="text-sm text-primary-light">Ventas totales</p>
+          <p className="text-sm text-primary-light">Total Sales</p>
           <p className="text-2xl font-semibold text-primary-accent mt-2">
             ${Number(totalSales).toFixed(2)}
           </p>
         </div>
 
         <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium">
-          <p className="text-sm text-primary-light">Servicios Activos</p>
+          <p className="text-sm text-primary-light">Active Services</p>
           <p className="text-2xl font-semibold text-primary-accent mt-2">
             {serviceCount}
           </p>
         </div>
 
         <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium">
-          <p className="text-sm text-primary-light">Órdenes Totales</p>
+          <p className="text-sm text-primary-light">Total Orders</p>
           <p className="text-2xl font-semibold text-primary-accent mt-2">
             {orderCount}
           </p>
@@ -210,7 +210,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Top Services */}
         <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium">
-          <h3 className="text-xl font-semibold text-primary-lightest mb-4">Servicios Más Vendidos</h3>
+          <h3 className="text-xl font-semibold text-primary-lightest mb-4">Top Selling Services</h3>
           {extendedStats.topServices.length > 0 ? (
             <div className="space-y-4">
               {extendedStats.topServices.map((service, index) => (
@@ -221,19 +221,19 @@ export default function Dashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-primary-lightest font-medium">${service.totalSales.toFixed(2)}</p>
-                    <p className="text-xs text-primary-light">{service.count} ventas</p>
+                    <p className="text-xs text-primary-light">{service.count} sales</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-primary-light text-sm">No hay datos de ventas disponibles.</p>
+            <p className="text-primary-light text-sm">No sales data available.</p>
           )}
         </div>
 
         {/* Category Distribution */}
         <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium">
-          <h3 className="text-xl font-semibold text-primary-lightest mb-4">Ventas por Categoría</h3>
+          <h3 className="text-xl font-semibold text-primary-lightest mb-4">Sales by Category</h3>
           {extendedStats.categoryStats.length > 0 ? (
             <div className="space-y-4">
               {extendedStats.categoryStats.map((cat, index) => (
@@ -252,22 +252,22 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-primary-light text-sm">No hay datos de categorías disponibles.</p>
+            <p className="text-primary-light text-sm">No category data available.</p>
           )}
         </div>
       </div>
 
       {/* Order History */}
       <div className="bg-primary-dark rounded-lg p-6 shadow-md border border-primary-medium mb-8">
-        <h3 className="text-xl font-semibold text-primary-lightest mb-4">Historial de Órdenes</h3>
+        <h3 className="text-xl font-semibold text-primary-lightest mb-4">Order History</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-primary-light">
             <thead>
               <tr className="border-b border-primary-medium">
                 <th className="pb-3 font-medium">ID</th>
-                <th className="pb-3 font-medium">Usuario</th>
-                <th className="pb-3 font-medium">Fecha</th>
-                <th className="pb-3 font-medium">Servicios</th>
+                <th className="pb-3 font-medium">User</th>
+                <th className="pb-3 font-medium">Date</th>
+                <th className="pb-3 font-medium">Services</th>
                 <th className="pb-3 font-medium text-right">Total</th>
               </tr>
             </thead>
@@ -305,7 +305,7 @@ export default function Dashboard() {
                   </tr>
                 ))) : (
                 <tr>
-                  <td colSpan="4" className="py-4 text-center text-primary-light">No hay órdenes registradas.</td>
+                  <td colSpan="4" className="py-4 text-center text-primary-light">No orders registered.</td>
                 </tr>
               )}
             </tbody>

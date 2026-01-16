@@ -24,19 +24,19 @@ export default function Services() {
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Todas');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('rating');
 
   const categories = [
-    'Todas',
-    'Desarrollo web',
-    'Diseño gráfico',
-    'Marketing digital',
-    'Redacción y traducción',
-    'Video y gráficos en movimiento',
-    'Música y audio',
-    'Negocios',
-    'Finanzas'
+    'All',
+    'Web Development',
+    'Graphic Design',
+    'Digital Marketing',
+    'Writing & Translation',
+    'Video & Animation',
+    'Music & Audio',
+    'Business',
+    'Finance'
   ];
 
   /**
@@ -59,7 +59,7 @@ export default function Services() {
 
     // Update URL without reloading
     const params = new URLSearchParams();
-    if (selectedCategory !== 'Todas') params.set('category', selectedCategory);
+    if (selectedCategory !== 'All') params.set('category', selectedCategory);
     if (searchQuery) params.set('search', searchQuery);
     if (currentPage > 1) params.set('page', currentPage.toString());
 
@@ -79,7 +79,7 @@ export default function Services() {
       // Note: The API might need updates to support 'search' and 'sortBy'
       // For now, we pass what we can. If API doesn't support search, we might need client-side filtering
       const data = await getServices({
-        category: selectedCategory === 'Todas' ? '' : selectedCategory,
+        category: selectedCategory === 'All' ? '' : selectedCategory,
         page: currentPage,
         pageSize: 12,
         search: searchQuery, // Assuming API supports this or we filter client-side
@@ -116,7 +116,7 @@ export default function Services() {
         setTotalPages(data.totalPages);
       }
     } catch (err) {
-      setError('Error al cargar los servicios. Por favor intenta de nuevo.');
+      setError('Error loading services. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -138,9 +138,9 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="mb-3 text-3xl font-bold text-primary-lightest md:text-4xl">Explorar servicios</h1>
+            <h1 className="mb-3 text-3xl font-bold text-primary-lightest md:text-4xl">Explore Services</h1>
             <p className="text-primary-light max-w-2xl">
-              Encuentra el profesional perfecto para tu proyecto entre miles de expertos verificados.
+              Find the perfect professional for your project among thousands of verified experts.
             </p>
           </motion.div>
         </div>
@@ -155,7 +155,7 @@ export default function Services() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-light/50" />
               <input
                 type="text"
-                placeholder="Buscar servicios..."
+                placeholder="Search services..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-10 pl-10 pr-4 rounded-md bg-primary-medium/20 border border-primary-light/10 text-primary-lightest placeholder-primary-light/50 focus:outline-none focus:ring-2 focus:ring-primary-accent transition-all"
@@ -168,19 +168,19 @@ export default function Services() {
               <div className="relative group">
                 <button className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary-medium/20 border border-primary-light/10 text-primary-lightest hover:bg-primary-medium/30 transition-all text-sm font-medium w-48 justify-between">
                   <span>
-                    {sortBy === 'rating' && 'Mejor calificados'}
-                    {sortBy === 'reviews' && 'Más reseñas'}
-                    {sortBy === 'price-low' && 'Precio: Menor a mayor'}
-                    {sortBy === 'price-high' && 'Precio: Mayor a menor'}
+                    {sortBy === 'rating' && 'Top Rated'}
+                    {sortBy === 'reviews' && 'Most Reviews'}
+                    {sortBy === 'price-low' && 'Price: Low to High'}
+                    {sortBy === 'price-high' && 'Price: High to Low'}
                   </span>
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 </button>
                 {/* Dropdown Content */}
                 <div className="absolute right-0 mt-2 w-48 bg-primary-dark border border-primary-light/10 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
-                  <button onClick={() => setSortBy('rating')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Mejor calificados</button>
-                  <button onClick={() => setSortBy('reviews')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Más reseñas</button>
-                  <button onClick={() => setSortBy('price-low')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Precio: Menor a mayor</button>
-                  <button onClick={() => setSortBy('price-high')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Precio: Mayor a menor</button>
+                  <button onClick={() => setSortBy('rating')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Top Rated</button>
+                  <button onClick={() => setSortBy('reviews')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Most Reviews</button>
+                  <button onClick={() => setSortBy('price-low')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Price: Low to High</button>
+                  <button onClick={() => setSortBy('price-high')} className="w-full text-left px-4 py-2 text-sm text-primary-light hover:bg-primary-medium/20 hover:text-white transition-colors">Price: High to Low</button>
                 </div>
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-primary-light">
-              {services.length} servicios encontrados
+              {services.length} services found
             </p>
           </div>
 
@@ -231,19 +231,19 @@ export default function Services() {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-medium/20 mb-4">
                 <Search className="h-8 w-8 text-primary-light/50" />
               </div>
-              <h3 className="text-xl font-semibold text-primary-lightest mb-2">No se encontraron resultados</h3>
+              <h3 className="text-xl font-semibold text-primary-lightest mb-2">No results found</h3>
               <p className="text-primary-light max-w-md mx-auto mb-6">
-                No pudimos encontrar servicios que coincidan con tus filtros. Intenta ajustar tu búsqueda o categoría.
+                We couldn't find any services matching your filters. Try adjusting your search or category.
               </p>
               <button
                 className="px-6 py-2 bg-primary-dark border border-primary-light/20 rounded-md text-primary-lightest hover:bg-primary-medium/20 transition-all"
                 onClick={() => {
                   setSearchQuery('');
-                  setSelectedCategory('Todas');
+                  setSelectedCategory('All');
                   setCurrentPage(1);
                 }}
               >
-                Limpiar filtros
+                Clear filters
               </button>
             </div>
           )}
@@ -256,11 +256,11 @@ export default function Services() {
                 disabled={currentPage === 1}
                 className="px-4 py-2 bg-primary-dark border border-primary-light/20 text-primary-lightest rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-medium/20 transition-all"
               >
-                Anterior
+                Previous
               </button>
 
               <span className="text-primary-light text-sm">
-                Página {currentPage} de {totalPages}
+                Page {currentPage} of {totalPages}
               </span>
 
               <button
@@ -268,7 +268,7 @@ export default function Services() {
                 disabled={currentPage === totalPages}
                 className="px-4 py-2 bg-primary-dark border border-primary-light/20 text-primary-lightest rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-medium/20 transition-all"
               >
-                Siguiente
+                Next
               </button>
             </div>
           )}

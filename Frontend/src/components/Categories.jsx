@@ -12,12 +12,12 @@ import { Code, Palette, Video, MessageSquare, Briefcase, TrendingUp } from 'luci
  */
 export default function Categories() {
     const categories = [
-        { icon: Code, label: 'Desarrollo', query: 'Desarrollo web', color: 'bg-blue-500/10 text-blue-500' },
-        { icon: Palette, label: 'Diseño', query: 'Diseño gráfico', color: 'bg-purple-500/10 text-purple-500' },
-        { icon: Video, label: 'Video', query: 'Video y gráficos en movimiento', color: 'bg-red-500/10 text-red-500' },
-        { icon: MessageSquare, label: 'Marketing', query: 'Marketing digital', color: 'bg-green-500/10 text-green-500' },
-        { icon: Briefcase, label: 'Negocios', query: 'Negocios', color: 'bg-orange-500/10 text-orange-500' },
-        { icon: TrendingUp, label: 'Finanzas', query: 'Finanzas', color: 'bg-cyan-500/10 text-cyan-500' },
+        { icon: Code, label: 'Development', query: 'Web Development', color: 'bg-blue-500/10 text-blue-500' },
+        { icon: Palette, label: 'Design', query: 'Graphic Design', color: 'bg-purple-500/10 text-purple-500' },
+        { icon: Video, label: 'Video', query: 'Video & Animation', color: 'bg-red-500/10 text-red-500' },
+        { icon: MessageSquare, label: 'Marketing', query: 'Digital Marketing', color: 'bg-green-500/10 text-green-500' },
+        { icon: Briefcase, label: 'Business', query: 'Business', color: 'bg-orange-500/10 text-orange-500' },
+        { icon: TrendingUp, label: 'Finance', query: 'Finance', color: 'bg-cyan-500/10 text-cyan-500' },
     ];
 
     return (
@@ -30,10 +30,10 @@ export default function Categories() {
                     className="mb-12 text-center"
                 >
                     <h2 className="mb-4 text-3xl font-bold text-primary-lightest md:text-4xl">
-                        Explora por categoría
+                        Explore by category
                     </h2>
                     <p className="mx-auto max-w-2xl text-primary-light">
-                        Encuentra el servicio perfecto navegando por nuestras categorías más populares
+                        Find the perfect service by browsing our most popular categories
                     </p>
                 </motion.div>
 

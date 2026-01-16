@@ -63,7 +63,7 @@ export default function CartIcon() {
     <a
       href="/checkout"
       className="relative text-primary-light hover:text-primary-accent transition-colors p-2"
-      aria-label="Carrito de compras"
+      aria-label="Shopping Cart"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -23,24 +23,24 @@ export default function CallToAction() {
 
                     <div className="relative z-10">
                         <h2 className="mb-4 text-3xl font-bold text-primary-lightest md:text-4xl">
-                            ¿Listo para empezar?
+                            Ready to get started?
                         </h2>
                         <p className="mx-auto mb-8 max-w-xl text-primary-light">
-                            Únete a miles de clientes satisfechos que ya encontraron el talento que buscaban
+                            Join thousands of satisfied customers who have already found the talent they were looking for
                         </p>
                         <div className="flex flex-col justify-center gap-4 sm:flex-row">
                             <a
                                 href="/services"
                                 className="px-8 py-4 bg-primary-accent text-white rounded-lg font-medium text-lg hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary-accent/20 flex items-center justify-center gap-2"
                             >
-                                Explorar servicios
+                                Explore services
                                 <ArrowRight className="h-5 w-5" />
                             </a>
                             <a
                                 href="/registro"
                                 className="px-8 py-4 bg-transparent border border-primary-light/20 text-primary-lightest rounded-lg font-medium text-lg hover:bg-primary-light/5 transition-all"
                             >
-                                Crear cuenta gratis
+                                Create free account
                             </a>
                         </div>
                     </div>

@@ -21,7 +21,7 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">Marketplace</span>
             </div>
             <p className="text-primary-light text-sm leading-relaxed mb-6">
-              La plataforma líder para encontrar y contratar servicios profesionales de alta calidad. Conectamos talento con oportunidades.
+              The leading platform for finding and hiring high-quality professional services. Connecting talent with opportunities.
             </p>
             <div className="flex gap-4">
               {/* Social Icons Placeholders */}
@@ -33,23 +33,23 @@ export default function Footer() {
 
           {/* Platform */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Plataforma</h3>
+            <h3 className="text-white font-semibold mb-6">Platform</h3>
             <ul className="space-y-4">
-              <li><a href="/services" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Explorar servicios</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Categorías</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Cómo funciona</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Regístrate</a></li>
+              <li><a href="/services" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Explore Services</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Categories</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">How it works</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Register</a></li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h3 className="text-white font-semibold mb-6">Soporte</h3>
+            <h3 className="text-white font-semibold mb-6">Support</h3>
             <ul className="space-y-4">
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Centro de ayuda</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Contacto</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Help Center</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Contact</a></li>
               <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">FAQ</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Disputas</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Disputes</a></li>
             </ul>
           </div>
 
@@ -57,8 +57,8 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-6">Legal</h3>
             <ul className="space-y-4">
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Privacidad</a></li>
-              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Términos de uso</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Privacy</a></li>
+              <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Terms of Use</a></li>
               <li><a href="#" className="text-primary-light hover:text-primary-accent text-sm transition-colors">Cookies</a></li>
             </ul>
           </div>
@@ -66,7 +66,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-8 text-center">
           <p className="text-primary-light text-xs">
-            © 2026 Marketplace. Todos los derechos reservados.
+            © 2026 Marketplace. All rights reserved.
           </p>
         </div>
       </div>

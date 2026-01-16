@@ -27,7 +27,7 @@ export default function Login() {
         e.preventDefault();
 
         if (!email || !password) {
-            showToast('Por favor completa todos los campos', 'error');
+            showToast('Please complete all fields', 'error');
             return;
         }
 
@@ -36,14 +36,14 @@ export default function Login() {
         try {
             const response = await loginUser({ email, password });
             login(response, response.token, response.refreshToken);
-            showToast('¡Bienvenido! Has iniciado sesión correctamente', 'success');
+            showToast('Welcome! You have successfully logged in', 'success');
 
             setTimeout(() => {
                 window.location.href = '/';
             }, 1000);
         } catch (error) {
-            let errorMessage = 'Error al iniciar sesión';
-            if (error.message?.includes('401')) errorMessage = 'Credenciales incorrectas';
+            let errorMessage = 'Error logging in';
+            if (error.message?.includes('401')) errorMessage = 'Incorrect credentials';
             else if (error.message) errorMessage = error.message;
 
             showToast(errorMessage, 'error');
@@ -59,21 +59,21 @@ export default function Login() {
             try {
                 const response = await googleCallback(codeResponse.code);
                 login(response, response.token, response.refreshToken);
-                showToast('¡Bienvenido! Has iniciado sesión con Google', 'success');
+                showToast('Welcome! You have successfully logged in with Google', 'success');
 
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 1000);
             } catch (error) {
                 console.error('Google login error:', error);
-                showToast('Error al iniciar sesión con Google', 'error');
+                showToast('Error logging in with Google', 'error');
             } finally {
                 setIsLoading(false);
             }
         },
         onError: (error) => {
             console.error('Google login error:', error);
-            showToast('Error al conectar con Google', 'error');
+            showToast('Error connecting with Google', 'error');
         }
     });
 
@@ -93,10 +93,10 @@ export default function Login() {
                             className="max-w-lg"
                         >
                             <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                                Bienvenido de <span className="text-primary-accent">nuevo</span>
+                                Welcome <span className="text-primary-accent">back</span>
                             </h1>
                             <p className="text-base lg:text-lg text-primary-light/80 leading-relaxed">
-                                Tu puerta de entrada a servicios profesionales de calidad. Conecta, colabora y crece con ServiceHub.
+                                Your gateway to quality professional services. Connect, collaborate, and grow with ServiceHub.
                             </p>
                         </motion.div>
                     </div>
@@ -117,11 +117,11 @@ export default function Login() {
                             transition={{ duration: 0.4 }}
                             className="max-w-md mx-auto w-full"
                         >
-                            <h2 className="text-3xl font-bold text-white mb-2">Iniciar sesión</h2>
+                            <h2 className="text-3xl font-bold text-white mb-2">Login</h2>
                             <p className="text-sm text-primary-light mb-8">
-                                ¿No tienes una cuenta?{' '}
+                                Don't have an account?{' '}
                                 <a href="/registro" className="font-medium text-primary-accent hover:text-coral-hover transition-colors">
-                                    Regístrate gratis
+                                    Register for free
                                 </a>
                             </p>
 
@@ -130,7 +130,7 @@ export default function Login() {
                                 {/* Email field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="email" className="text-primary-light text-sm font-medium">
-                                        Correo electrónico
+                                        Email
                                     </Label>
                                     <div className="relative group">
                                         <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50 group-focus-within:text-primary-accent transition-colors" />
@@ -150,10 +150,10 @@ export default function Login() {
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
                                         <Label htmlFor="password" className="text-primary-light text-sm font-medium">
-                                            Contraseña
+                                            Password
                                         </Label>
                                         <a href="/forgot-password" className="text-xs font-medium text-primary-accent hover:text-coral-hover transition-colors">
-                                            ¿Olvidaste tu contraseña?
+                                            Forgot your password?
                                         </a>
                                     </div>
                                     <div className="relative group">
@@ -186,10 +186,10 @@ export default function Login() {
                                     {isLoading ? (
                                         <>
                                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                            Iniciando sesión...
+                                            Logging in...
                                         </>
                                     ) : (
-                                        'Iniciar sesión'
+                                        'Login'
                                     )}
                                 </Button>
                             </form>
@@ -234,10 +234,10 @@ export default function Login() {
 
                             {/* Terms and Privacy */}
                             <p className="text-xs text-primary-light/40 mt-8 text-center">
-                                Al iniciar sesión, aceptas nuestros{' '}
-                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Términos de servicio</a>
-                                {' '}y{' '}
-                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Política de privacidad</a>
+                                By logging in, you accept our{' '}
+                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Terms of Service</a>
+                                {' '}and{' '}
+                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Privacy Policy</a>
                             </p>
                         </motion.div>
                     </div>
@@ -245,7 +245,7 @@ export default function Login() {
                     {/* Footer */}
                     <div className="py-6 text-center relative z-10">
                         <p className="text-xs text-primary-light/20">
-                            &copy; {new Date().getFullYear()} ServiceHub. Todos los derechos reservados.
+                            &copy; {new Date().getFullYear()} ServiceHub. All rights reserved.
                         </p>
                     </div>
                 </div>

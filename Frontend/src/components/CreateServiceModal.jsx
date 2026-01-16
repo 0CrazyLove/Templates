@@ -39,18 +39,18 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
         try {
             // Basic validation
             if (!formData.name || !formData.price || !formData.provider || !formData.deliveryTime) {
-                throw new Error('Por favor completa los campos requeridos (*)');
+                throw new Error('Please complete required fields (*)');
             }
 
             const serviceData = {
                 ...formData,
                 price: parseFloat(formData.price),
-                languages: ['Spanish'] // Default language for now
+                languages: ['English'] // Default language for now
             };
 
             await createService(serviceData, token);
 
-            showToast('Servicio creado exitosamente', 'success');
+            showToast('Service created successfully', 'success');
             onServiceCreated?.();
             onClose();
 
@@ -69,8 +69,8 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
 
         } catch (err) {
             console.error(err);
-            setError(err.message || 'Error al crear el servicio');
-            showToast(err.message || 'Error al crear el servicio', 'error');
+            setError(err.message || 'Error creating service');
+            showToast(err.message || 'Error creating service', 'error');
         } finally {
             setLoading(false);
         }
@@ -99,7 +99,7 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
                             className="bg-primary-dark border border-primary-medium rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
                         >
                             <div className="p-6 border-b border-primary-medium flex justify-between items-center sticky top-0 bg-primary-dark z-10">
-                                <h2 className="text-2xl font-bold text-primary-lightest">Crear Nuevo Servicio</h2>
+                                <h2 className="text-2xl font-bold text-primary-lightest">Create New Service</h2>
                                 <button
                                     onClick={onClose}
                                     className="text-primary-light hover:text-primary-accent transition-colors p-2 hover:bg-primary-medium/30 rounded-full"
@@ -119,33 +119,33 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* Name */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Nombre del Servicio *</label>
+                                        <label className="text-sm font-medium text-primary-light">Service Name *</label>
                                         <input
                                             type="text"
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
                                             className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all"
-                                            placeholder="Ej. Diseño de Logo Profesional"
+                                            placeholder="Ex. Professional Logo Design"
                                         />
                                     </div>
 
                                     {/* Provider */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Proveedor *</label>
+                                        <label className="text-sm font-medium text-primary-light">Provider *</label>
                                         <input
                                             type="text"
                                             name="provider"
                                             value={formData.provider}
                                             onChange={handleChange}
                                             className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all"
-                                            placeholder="Ej. Studio Creativo"
+                                            placeholder="Ex. Creative Studio"
                                         />
                                     </div>
 
                                     {/* Price */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Precio ($) *</label>
+                                        <label className="text-sm font-medium text-primary-light">Price ($) *</label>
                                         <input
                                             type="number"
                                             name="price"
@@ -160,49 +160,49 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
 
                                     {/* Price Type */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Tipo de Precio</label>
+                                        <label className="text-sm font-medium text-primary-light">Price Type</label>
                                         <select
                                             name="priceType"
                                             value={formData.priceType}
                                             onChange={handleChange}
                                             className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all"
                                         >
-                                            <option value="project">Por Proyecto</option>
-                                            <option value="hour">Por Hora</option>
-                                            <option value="month">Mensual</option>
+                                            <option value="project">Per Project</option>
+                                            <option value="hour">Per Hour</option>
+                                            <option value="month">Monthly</option>
                                         </select>
                                     </div>
 
                                     {/* Category */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Categoría</label>
+                                        <label className="text-sm font-medium text-primary-light">Category</label>
                                         <input
                                             type="text"
                                             name="category"
                                             value={formData.category}
                                             onChange={handleChange}
                                             className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all"
-                                            placeholder="Ej. Diseño Gráfico"
+                                            placeholder="Ex. Graphic Design"
                                         />
                                     </div>
 
                                     {/* Delivery Time */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-primary-light">Tiempo de Entrega *</label>
+                                        <label className="text-sm font-medium text-primary-light">Delivery Time *</label>
                                         <input
                                             type="text"
                                             name="deliveryTime"
                                             value={formData.deliveryTime}
                                             onChange={handleChange}
                                             className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all"
-                                            placeholder="Ej. 3-5 días"
+                                            placeholder="Ex. 3-5 days"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Image URL */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-primary-light">URL de Imagen</label>
+                                    <label className="text-sm font-medium text-primary-light">Image URL</label>
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -223,14 +223,14 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
 
                                 {/* Description */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-primary-light">Descripción</label>
+                                    <label className="text-sm font-medium text-primary-light">Description</label>
                                     <textarea
                                         name="description"
                                         value={formData.description}
                                         onChange={handleChange}
                                         rows="4"
                                         className="w-full bg-primary-darkest border border-primary-medium rounded-lg px-4 py-2.5 text-primary-lightest focus:ring-2 focus:ring-primary-accent focus:border-transparent outline-none transition-all resize-none"
-                                        placeholder="Describe los detalles del servicio..."
+                                        placeholder="Describe service details..."
                                     ></textarea>
                                 </div>
 
@@ -240,7 +240,7 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
                                         onClick={onClose}
                                         className="px-6 py-2.5 rounded-lg text-primary-light hover:text-primary-lightest hover:bg-primary-medium/30 transition-colors font-medium"
                                     >
-                                        Cancelar
+                                        Cancel
                                     </button>
                                     <button
                                         type="submit"
@@ -250,12 +250,12 @@ export default function CreateServiceModal({ isOpen, onClose, onServiceCreated }
                                         {loading ? (
                                             <>
                                                 <Loader2 size={18} className="animate-spin" />
-                                                Creando...
+                                                Creating...
                                             </>
                                         ) : (
                                             <>
                                                 <CheckCircle size={18} />
-                                                Crear Servicio
+                                                Create Service
                                             </>
                                         )}
                                     </button>

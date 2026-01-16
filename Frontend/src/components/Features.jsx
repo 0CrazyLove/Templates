@@ -12,18 +12,18 @@ export default function Features() {
     const steps = [
         {
             step: '01',
-            title: 'Busca el servicio',
-            description: 'Explora nuestra amplia variedad de servicios profesionales y encuentra el que necesitas.',
+            title: 'Find the service',
+            description: 'Explore our wide variety of professional services and find the one you need.',
         },
         {
             step: '02',
-            title: 'Elige al profesional',
-            description: 'Compara perfiles, reseñas y precios para encontrar al profesional ideal.',
+            title: 'Choose the professional',
+            description: 'Compare profiles, reviews, and prices to find the ideal professional.',
         },
         {
             step: '03',
-            title: 'Recibe tu proyecto',
-            description: 'Comunícate con el profesional y recibe tu proyecto con garantía de satisfacción.',
+            title: 'Receive your project',
+            description: 'Communicate with the professional and receive your project with satisfaction guarantee.',
         },
     ];
 
@@ -37,10 +37,10 @@ export default function Features() {
                     className="mb-12 text-center"
                 >
                     <h2 className="mb-4 text-3xl font-bold text-primary-lightest md:text-4xl">
-                        Cómo funciona
+                        How it works
                     </h2>
                     <p className="mx-auto max-w-2xl text-primary-light">
-                        Contratar un profesional nunca fue tan fácil
+                        Hiring a professional has never been easier
                     </p>
                 </motion.div>
 

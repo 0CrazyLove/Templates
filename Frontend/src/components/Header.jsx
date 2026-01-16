@@ -110,7 +110,7 @@ export default function Header() {
       user?.username ||
       user?.userName ||
       user?.email?.split('@')[0] ||
-      'Usuario'
+      'User'
     );
   };
 
@@ -232,26 +232,26 @@ export default function Header() {
                 href="/"
                 className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               >
-                Inicio
+                Home
               </a>
               <a
                 href="/services"
                 className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               >
-                Servicios
+                Services
               </a>
               <a
                 href="/about"
                 className="text-primary-light hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               >
-                Acerca de
+                About
               </a>
               {showAdmin && (
                 <a
                   href="/dashboard"
                   className="text-primary-accent hover:text-primary-lightest px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
-                  Panel Admin
+                  Admin Panel
                 </a>
               )}
             </div>
@@ -295,7 +295,7 @@ export default function Header() {
                           onClick={handleLogout}
                           className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
                         >
-                          Cerrar Sesión
+                          Logout
                         </button>
                       </div>
                     </div>
@@ -307,13 +307,13 @@ export default function Header() {
                     href="/login"
                     className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
                   >
-                    Iniciar Sesión
+                    Login
                   </a>
                   <a
                     href="/registro"
                     className="bg-primary-accent hover:bg-opacity-90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-lg shadow-primary-accent/20 hover:shadow-primary-accent/40"
                   >
-                    Registrarse
+                    Register
                   </a>
                 </div>
               )}
@@ -356,26 +356,26 @@ export default function Header() {
               href="/"
               className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
-              Inicio
+              Home
             </a>
             <a
               href="/services"
               className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
-              Servicios
+              Services
             </a>
             <a
               href="/about"
               className="text-gray-300 hover:bg-white/5 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
-              Acerca de
+              About
             </a>
             {showAdmin && (
               <a
                 href="/dashboard"
                 className="text-primary-accent hover:bg-primary-accent/10 block px-3 py-2 rounded-md text-base font-medium transition-colors"
               >
-                Panel Admin
+                Admin Panel
               </a>
             )}
           </div>
@@ -407,19 +407,19 @@ export default function Header() {
                   href="/profile"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
                 >
-                  Mi Perfil
+                  My Profile
                 </a>
                 <a
                   href="/orders"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
                 >
-                  Mis Pedidos
+                  My Orders
                 </a>
                 <button
                   onClick={handleLogout}
                   className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
                 >
-                  Cerrar Sesión
+                  Logout
                 </button>
               </div>
             </div>
@@ -429,13 +429,13 @@ export default function Header() {
                 href="/login"
                 className="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-white/10 hover:bg-white/20 transition-colors"
               >
-                Iniciar Sesión
+                Login
               </a>
               <a
                 href="/registro"
                 className="block w-full text-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary-accent hover:bg-opacity-90 transition-colors"
               >
-                Registrarse
+                Register
               </a>
             </div>
           )}

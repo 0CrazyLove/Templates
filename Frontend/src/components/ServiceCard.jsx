@@ -30,12 +30,12 @@ export default function ServiceCard({ service, index = 0 }) {
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center text-primary-light">
-                        Sin imagen
+                        No image
                     </div>
                 )}
                 {service.verified && (
                     <div className="absolute right-3 top-3 rounded-full bg-blue-500/90 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-sm">
-                        Verificado
+                        Verified
                     </div>
                 )}
             </div>
@@ -64,11 +64,11 @@ export default function ServiceCard({ service, index = 0 }) {
                 {/* Footer */}
                 <div className="mt-auto flex items-center justify-between border-t border-primary-light/10 pt-4">
                     <div className="flex flex-col">
-                        <span className="text-xs text-primary-light">Desde</span>
+                        <span className="text-xs text-primary-light">From</span>
                         <span className="text-lg font-bold text-primary-lightest">
                             ${service.price}
                             <span className="text-xs font-normal text-primary-light/70 ml-1">
-                                /{service.priceType === 'project' ? 'proy' : service.priceType}
+                                /{service.priceType === 'project' ? 'proj' : service.priceType}
                             </span>
                         </span>
                     </div>
@@ -76,7 +76,7 @@ export default function ServiceCard({ service, index = 0 }) {
                         href={`/service/${service.id}`}
                         className="rounded-lg bg-primary-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-accent/90"
                     >
-                        Ver detalles
+                        View details
                     </a>
                 </div>
             </div>

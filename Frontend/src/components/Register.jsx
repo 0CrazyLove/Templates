@@ -40,13 +40,13 @@ export default function Register() {
 
         // Validate passwords match
         if (formData.password !== formData.confirmPassword) {
-            showToast('Las contraseñas no coinciden', 'error');
+            showToast('Passwords do not match', 'error');
             return;
         }
 
         // Validate password length
         if (formData.password.length < 6) {
-            showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+            showToast('Password must be at least 6 characters', 'error');
             return;
         }
 
@@ -55,20 +55,20 @@ export default function Register() {
         try {
             const response = await registerUser(formData);
             login(response, response.token, response.refreshToken);
-            showToast('¡Cuenta creada con éxito!', 'success');
+            showToast('Account created successfully!', 'success');
 
             setTimeout(() => {
                 window.location.href = '/';
             }, 1000);
         } catch (err) {
-            let errorMessage = 'Error durante el registro';
+            let errorMessage = 'Error during registration';
 
             if (err.message?.includes('400') || err.message?.includes('Bad Request')) {
-                errorMessage = 'Verifica que el correo no esté registrado y que los datos sean válidos.';
+                errorMessage = 'Verify that the email is not registered and that the data is valid.';
             } else if (err.message?.includes('409') || err.message?.includes('Conflict')) {
-                errorMessage = 'Este correo ya está registrado. Prueba con otro.';
+                errorMessage = 'This email is already registered. Try another one.';
             } else if (err.message?.includes('500')) {
-                errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
+                errorMessage = 'Server error. Please try again later.';
             } else if (err.message) {
                 errorMessage = err.message;
             }
@@ -95,10 +95,10 @@ export default function Register() {
                             className="max-w-lg"
                         >
                             <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                                Únete a nuestra <span className="text-primary-accent">comunidad</span>
+                                Join our <span className="text-primary-accent">community</span>
                             </h1>
                             <p className="text-base lg:text-lg text-primary-light/80 leading-relaxed">
-                                Miles de profesionales y clientes ya confían en nosotros. ¡Sé parte de la revolución!
+                                Thousands of professionals and clients already trust us. Be part of the revolution!
                             </p>
                         </motion.div>
                     </div>
@@ -119,11 +119,11 @@ export default function Register() {
                             transition={{ duration: 0.4 }}
                             className="max-w-md mx-auto w-full"
                         >
-                            <h2 className="text-3xl font-bold text-white mb-2">Crear cuenta</h2>
+                            <h2 className="text-3xl font-bold text-white mb-2">Create account</h2>
                             <p className="text-sm text-primary-light mb-8">
-                                ¿Ya tienes una cuenta?{' '}
+                                Already have an account?{' '}
                                 <a href="/login" className="font-medium text-primary-accent hover:text-coral-hover transition-colors">
-                                    Inicia sesión
+                                    Login
                                 </a>
                             </p>
 
@@ -132,7 +132,7 @@ export default function Register() {
                                 {/* Username field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="userName" className="text-primary-light text-sm font-medium">
-                                        Nombre de usuario
+                                        Username
                                     </Label>
                                     <div className="relative group">
                                         <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50 group-focus-within:text-primary-accent transition-colors" />
@@ -153,7 +153,7 @@ export default function Register() {
                                 {/* Email field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="email" className="text-primary-light text-sm font-medium">
-                                        Correo electrónico
+                                        Email
                                     </Label>
                                     <div className="relative group">
                                         <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50 group-focus-within:text-primary-accent transition-colors" />
@@ -174,7 +174,7 @@ export default function Register() {
                                 {/* Password field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="password" className="text-primary-light text-sm font-medium">
-                                        Contraseña
+                                        Password
                                     </Label>
                                     <div className="relative group">
                                         <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50 group-focus-within:text-primary-accent transition-colors" />
@@ -202,7 +202,7 @@ export default function Register() {
                                 {/* Confirm Password field */}
                                 <div className="space-y-2">
                                     <Label htmlFor="confirmPassword" className="text-primary-light text-sm font-medium">
-                                        Confirmar contraseña
+                                        Confirm Password
                                     </Label>
                                     <div className="relative group">
                                         <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50 group-focus-within:text-primary-accent transition-colors" />
@@ -236,20 +236,20 @@ export default function Register() {
                                     {isLoading ? (
                                         <>
                                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                            Creando cuenta...
+                                            Creating account...
                                         </>
                                     ) : (
-                                        'Crear cuenta'
+                                        'Create account'
                                     )}
                                 </Button>
                             </form>
 
                             {/* Terms and Privacy */}
                             <p className="text-xs text-primary-light/40 mt-8 text-center">
-                                Al crear una cuenta, aceptas nuestros{' '}
-                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Términos de servicio</a>
-                                {' '}y{' '}
-                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Política de privacidad</a>
+                                By creating an account, you accept our{' '}
+                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Terms of Service</a>
+                                {' '}and{' '}
+                                <a href="#" className="text-primary-light/60 hover:text-primary-accent transition-colors">Privacy Policy</a>
                             </p>
                         </motion.div>
                     </div>
@@ -257,7 +257,7 @@ export default function Register() {
                     {/* Footer */}
                     <div className="py-6 text-center relative z-10">
                         <p className="text-xs text-primary-light/20">
-                            &copy; {new Date().getFullYear()} ServiceHub. Todos los derechos reservados.
+                            &copy; {new Date().getFullYear()} ServiceHub. All rights reserved.
                         </p>
                     </div>
                 </div>

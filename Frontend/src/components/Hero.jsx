@@ -25,17 +25,17 @@ export default function Hero() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl">
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Transforma tus ideas en <span className="text-primary-accent">realidad</span>
+            Transform your ideas into <span className="text-primary-accent">reality</span>
           </h1>
           <p className="text-xl text-primary-light mb-8 max-w-2xl leading-relaxed">
-            Accede a una red global de talento freelance. Desde desarrollo web hasta marketing digital, encuentra al experto perfecto para tu próximo proyecto.
+            Access a global network of freelance talent. From web development to digital marketing, find the perfect expert for your next project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button className="px-8 py-4 bg-primary-accent text-white rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary-accent/30 transform hover:-translate-y-1">
-              Comenzar ahora
+              Get Started
             </button>
             <button className="px-8 py-4 bg-primary-medium/30 text-white rounded-lg font-semibold text-lg hover:bg-primary-medium/50 transition-all backdrop-blur-sm border border-primary-light/10">
-              Ver cómo funciona
+              See how it works
             </button>
           </div>
 
@@ -47,11 +47,11 @@ export default function Hero() {
             </div>
             <div>
               <p className="text-3xl font-bold text-white">100k+</p>
-              <p className="text-sm text-primary-light">Proyectos</p>
+              <p className="text-sm text-primary-light">Projects</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-white">4.9/5</p>
-              <p className="text-sm text-primary-light">Valoración</p>
+              <p className="text-sm text-primary-light">Rating</p>
             </div>
           </div>
         </div>

@@ -41,14 +41,14 @@ export default function LoginForm({ enableGoogle = false }) {
         window.location.href = '/';
       }, 500);
     } catch (err) {
-      let errorMessage = 'Error al iniciar sesión';
+      let errorMessage = 'Error logging in';
 
       if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-        errorMessage = 'Correo o contraseña inválidos. Intenta de nuevo.';
+        errorMessage = 'Invalid email or password. Try again.';
       } else if (err.message.includes('400') || err.message.includes('Bad Request')) {
-        errorMessage = 'Verifica tu información.';
+        errorMessage = 'Check your information.';
       } else if (err.message.includes('500')) {
-        errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
+        errorMessage = 'Server error. Try again later.';
       } else if (err.message) {
         errorMessage = err.message;
       }
@@ -77,7 +77,7 @@ export default function LoginForm({ enableGoogle = false }) {
       }, 500);
     } catch (err) {
       console.error('Google login error:', err);
-      setError('Error al iniciar sesión con Google. Por favor intenta nuevamente.');
+      setError('Error logging in with Google. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -88,14 +88,14 @@ export default function LoginForm({ enableGoogle = false }) {
    */
   const handleGoogleError = (error) => {
     console.error('Google OAuth error:', error);
-    setError('Error al conectar con Google. Por favor intenta nuevamente.');
+    setError('Error connecting with Google. Please try again.');
   };
 
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-primary-dark rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold text-primary-lightest mb-6 text-center">
-          Iniciar sesión
+          Log in
         </h2>
 
         {/* Error message display */}
@@ -121,7 +121,7 @@ export default function LoginForm({ enableGoogle = false }) {
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-4 bg-primary-dark text-primary-light">
-              O continuar con correo
+              Or continue with email
             </span>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function LoginForm({ enableGoogle = false }) {
               htmlFor="email"
               className="block text-primary-light text-sm font-medium mb-2"
             >
-              Correo electrónico
+              Email
             </label>
             <input
               type="email"
@@ -150,7 +150,7 @@ export default function LoginForm({ enableGoogle = false }) {
               htmlFor="password"
               className="block text-primary-light text-sm font-medium mb-2"
             >
-              Contraseña
+              Password
             </label>
             <div className="relative">
               <input
@@ -165,7 +165,7 @@ export default function LoginForm({ enableGoogle = false }) {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-light hover:text-primary-lightest transition"
-                title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                title={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? (
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -195,22 +195,22 @@ export default function LoginForm({ enableGoogle = false }) {
             disabled={loading}
             className="w-full bg-primary-accent hover:bg-opacity-80 disabled:opacity-50 text-primary-lightest font-bold py-2 px-4 rounded-md transition"
           >
-            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            {loading ? 'Logging in...' : 'Log in'}
           </button>
         </form>
 
         {/* Sign up link */}
         <p className="text-primary-light text-center mt-6">
-          ¿No tienes una cuenta?{' '}
+          Don't have an account?{' '}
           <a href="/registro" className="text-primary-accent hover:text-primary-lightest font-bold">
-            Regístrate aquí
+            Sign up here
           </a>
         </p>
 
         {/* Demo credentials */}
         <div className="mt-6 pt-6 border-t border-primary-accent">
           <p className="text-primary-light text-sm text-center mb-2">
-            Credenciales de prueba:
+            Test credentials:
           </p>
           <p className="text-primary-light text-xs text-center">
             Email: <code className="bg-primary-medium px-2 py-1 rounded">admin@example.com</code>

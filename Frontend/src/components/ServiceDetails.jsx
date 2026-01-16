@@ -63,7 +63,7 @@ function ServiceDetailsContent({ serviceId }) {
                 setService(data);
             } catch (err) {
                 console.error(err);
-                setError('No se pudo cargar el servicio. Por favor intenta de nuevo.');
+                setError('Could not load service. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -117,7 +117,7 @@ function ServiceDetailsContent({ serviceId }) {
     };
 
     if (loading)
-        return <div className="p-6 text-center">Cargando servicio...</div>;
+        return <div className="p-6 text-center">Loading service...</div>;
     if (error) return <div className="p-6 text-red-400">{error}</div>;
     if (!service) return null;
 
@@ -148,10 +148,10 @@ function ServiceDetailsContent({ serviceId }) {
                                 {service.name}
                             </h1>
                             <p className="text-primary-accent text-lg font-semibold">
-                                por {service.provider}
+                                by {service.provider}
                             </p>
                             {service.verified && (
-                                <p className="text-blue-400 text-sm mt-2">✓ Verificado</p>
+                                <p className="text-blue-400 text-sm mt-2">✓ Verified</p>
                             )}
                         </div>
 
@@ -174,7 +174,7 @@ function ServiceDetailsContent({ serviceId }) {
 
                         {/* Pricing */}
                         <div className="border-t border-primary-medium pt-4">
-                            <div className="text-sm text-primary-light mb-1">Precio</div>
+                            <div className="text-sm text-primary-light mb-1">Price</div>
                             <div className="text-3xl font-bold text-primary-accent">
                                 ${Number(service.price).toFixed(2)}
                                 <span className="text-lg text-primary-light">
@@ -187,7 +187,7 @@ function ServiceDetailsContent({ serviceId }) {
                         <div className="border-t border-primary-medium pt-4 space-y-2">
                             <div>
                                 <span className="text-primary-light text-sm">
-                                    Tiempo de entrega:
+                                    Delivery Time:
                                 </span>
                                 <p className="text-primary-lightest font-semibold">
                                     {service.deliveryTime}
@@ -195,7 +195,7 @@ function ServiceDetailsContent({ serviceId }) {
                             </div>
                             {service.languages?.length > 0 && (
                                 <div>
-                                    <span className="text-primary-light text-sm">Idiomas:</span>
+                                    <span className="text-primary-light text-sm">Languages:</span>
                                     <div className="flex flex-wrap gap-2 mt-1">
                                         {service.languages.map((lang) => (
                                             <span
@@ -228,10 +228,10 @@ function ServiceDetailsContent({ serviceId }) {
                                     }`}
                             >
                                 {submitting
-                                    ? 'Procesando...'
+                                    ? 'Processing...'
                                     : service.available
-                                        ? 'Solicitar servicio'
-                                        : 'No disponible'}
+                                        ? 'Request Service'
+                                        : 'Not Available'}
                             </button>
 
                             <button
@@ -242,9 +242,9 @@ function ServiceDetailsContent({ serviceId }) {
                                         ? 'w-16 bg-red-500/10 border-2 border-red-500 text-red-500 hover:bg-red-500/20'
                                         : 'w-full bg-primary-darkest border-2 border-primary-accent text-primary-accent hover:bg-primary-dark'
                                     }`}
-                                title={isInCart ? "Eliminar del carrito" : "Añadir al carrito"}
+                                title={isInCart ? "Remove from cart" : "Add to cart"}
                             >
-                                {isInCart ? <Trash2 size={20} /> : 'Añadir al carrito'}
+                                {isInCart ? <Trash2 size={20} /> : 'Add to cart'}
                             </button>
                         </div>
                     </div>
@@ -301,7 +301,7 @@ function ServiceDetailsContent({ serviceId }) {
             {/* Order Confirmation Modal */}
             <Modal
                 open={orderModalOpen}
-                title="Solicitud enviada"
+                title="Request sent"
                 onClose={() => setOrderModalOpen(false)}
                 footer={
                     <div className="flex justify-between gap-3">
@@ -309,7 +309,7 @@ function ServiceDetailsContent({ serviceId }) {
                             onClick={() => setOrderModalOpen(false)}
                             className="px-4 py-2 bg-primary-accent text-white rounded hover:bg-opacity-80"
                         >
-                            Cerrar
+                            Close
                         </button>
                     </div>
                 }
@@ -317,14 +317,14 @@ function ServiceDetailsContent({ serviceId }) {
                 {createdOrder ? (
                     <div className="space-y-4">
                         <div className="bg-primary-darkest p-4 rounded">
-                            <p className="text-sm text-primary-light">ID de orden</p>
+                            <p className="text-sm text-primary-light">Order ID</p>
                             <p className="text-2xl font-bold text-primary-accent">
                                 #{createdOrder.id}
                             </p>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                                <p className="text-primary-light">Fecha</p>
+                                <p className="text-primary-light">Date</p>
                                 <p className="text-primary-lightest font-semibold">
                                     {new Date(createdOrder.orderDate).toLocaleString()}
                                 </p>
@@ -338,7 +338,7 @@ function ServiceDetailsContent({ serviceId }) {
                         </div>
                         <div className="border-t border-primary-medium pt-4">
                             <p className="font-semibold text-primary-lightest mb-2">
-                                Servicios solicitados
+                                Requested Services
                             </p>
                             <ul className="space-y-2">
                                 {createdOrder.orderItems.map((it) => (
@@ -353,7 +353,7 @@ function ServiceDetailsContent({ serviceId }) {
                         </div>
                     </div>
                 ) : (
-                    <div className="text-primary-light">No hay detalles disponibles.</div>
+                    <div className="text-primary-light">No details available.</div>
                 )}
             </Modal>
         </div>

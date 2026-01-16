@@ -10,10 +10,10 @@ import { motion } from 'framer-motion';
  */
 export default function Stats() {
     const stats = [
-        { value: '10K+', label: 'Profesionales' },
-        { value: '50K+', label: 'Proyectos completados' },
-        { value: '4.9', label: 'Calificación promedio' },
-        { value: '24/7', label: 'Soporte' },
+        { value: '10K+', label: 'Professionals' },
+        { value: '50K+', label: 'Projects completed' },
+        { value: '4.9', label: 'Average rating' },
+        { value: '24/7', label: 'Support' },
     ];
 
     return (

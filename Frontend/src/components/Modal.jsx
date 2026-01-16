@@ -27,7 +27,7 @@ export default function Modal({ open, title, children, onClose, footer }) {
           <button
             onClick={onClose}
             className="text-primary-light hover:text-white"
-            aria-label="Cerrar modal"
+            aria-label="Close modal"
           >
             ✕
           </button>

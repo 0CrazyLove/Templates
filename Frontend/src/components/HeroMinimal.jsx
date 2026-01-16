@@ -32,12 +32,12 @@ export default function HeroMinimal() {
                     className="mx-auto max-w-3xl text-center"
                 >
                     <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-primary-lightest md:text-5xl lg:text-6xl">
-                        Encuentra el talento perfecto para tu{' '}
-                        <span className="text-primary-accent">próximo proyecto</span>
+                        Find the perfect talent for your{' '}
+                        <span className="text-primary-accent">next project</span>
                     </h1>
                     <p className="mb-8 text-lg text-primary-light md:text-xl">
-                        Conectamos empresas con profesionales verificados. Desde desarrollo hasta diseño,
-                        encuentra el servicio que necesitas con garantía de calidad.
+                        We connect companies with verified professionals. From development to design,
+                        find the service you need with quality guarantee.
                     </p>
 
                     {/* Search Bar */}
@@ -46,7 +46,7 @@ export default function HeroMinimal() {
                             <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-light/50" />
                             <input
                                 type="text"
-                                placeholder="¿Qué servicio necesitas?"
+                                placeholder="What service do you need?"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full h-14 pl-12 pr-4 text-base bg-primary-medium/30 text-primary-lightest placeholder-primary-light/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-accent border border-primary-light/10 transition-all focus:bg-primary-medium/50"
@@ -56,7 +56,7 @@ export default function HeroMinimal() {
                             type="submit"
                             className="h-14 px-8 bg-primary-accent text-white rounded-lg font-medium text-lg hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary-accent/20 flex items-center justify-center gap-2"
                         >
-                            Buscar
+                            Search
                             <ArrowRight className="h-5 w-5" />
                         </button>
                     </form>
@@ -64,7 +64,7 @@ export default function HeroMinimal() {
                     {/* Popular Categories */}
                     <div className="flex flex-wrap items-center justify-center gap-2">
                         <span className="text-sm text-primary-light">Popular:</span>
-                        {['Diseño Web', 'Logo', 'WordPress', 'Video Edición'].map((tag) => (
+                        {['Web Design', 'Logo', 'WordPress', 'Video Editing'].map((tag) => (
                             <a
                                 key={tag}
                                 href={`/services?search=${encodeURIComponent(tag)}`}

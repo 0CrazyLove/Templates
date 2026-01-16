@@ -28,10 +28,10 @@ export default function OrdersList() {
    */
   useEffect(() => {
     if (!mounted) return;
-    
+
     if (!isAuthenticated) {
       setLoading(false);
-      setError('Inicia sesión para ver tus órdenes.');
+      setError('Login to view your orders.');
       return;
     }
 
@@ -42,28 +42,28 @@ export default function OrdersList() {
         setOrders(data);
       } catch (err) {
         console.error(err);
-        setError('No se pudieron recuperar tus órdenes. Intenta más tarde.');
-        push('Error al cargar órdenes', 'error');
+        setError('Could not retrieve your orders. Try again later.');
+        push('Error loading orders', 'error');
       } finally {
         setLoading(false);
       }
     };
-    
+
     load();
   }, [token, isAuthenticated, mounted, push]);
 
   if (loading)
-    return <div className="p-6 text-primary-light">Cargando órdenes...</div>;
+    return <div className="p-6 text-primary-light">Loading orders...</div>;
   if (error) return <div className="p-6 text-red-400">{error}</div>;
 
   return (
     <div className="mt-8">
       <h3 className="text-xl font-semibold text-primary-lightest mb-4">
-        Tus órdenes
+        Your Orders
       </h3>
       {orders.length === 0 ? (
         <div className="text-primary-light">
-          Aún no tienes órdenes.
+          You don't have any orders yet.
         </div>
       ) : (
         <div className="space-y-4">
