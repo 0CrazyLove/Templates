@@ -1,24 +1,24 @@
 services:
-  # SQL Server Database
+  # PostgreSQL Database
   database:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres:16-alpine
     container_name: servicehub_database
     environment:
-      SA_PASSWORD: "${DB_PASSWORD}"
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Express"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_DB: "${DB_NAME}"
     ports:
-      - "1434:1433"
+      - "5432:5432"
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - servicehub_network
     healthcheck:
-      test: [ "CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "sa", "-P", "${DB_PASSWORD}", "-Q", "SELECT 1" ]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 3s
       retries: 10
-      start_period: 60s
+      start_period: 10s
 
   # .NET Backend API
   backend:
@@ -29,7 +29,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: "${ASPNETCORE_URLS}"
-      CONNECTION_STRING: "Server=database;Database=AppDB;User Id=${DB_USER};Password=${DB_PASSWORD};Encrypt=false;TrustServerCertificate=true;"
+      CONNECTION_STRING: "${CONNECTION_STRING}"
       JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
       JWT_ISSUER: "${JWT_ISSUER}"
       JWT_AUDIENCE: "${JWT_AUDIENCE}"
@@ -89,5 +89,4 @@ networks:
     driver: bridge
 
 volumes:
-  sqlserver_data:
-    driver: local
+  postgres_data:

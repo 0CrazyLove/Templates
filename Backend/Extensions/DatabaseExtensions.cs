@@ -19,7 +19,7 @@ public static class DatabaseExtensions
     public static IServiceCollection AddDatabaseServices(this IServiceCollection services)
     {
         // Configure Entity Framework Core with SQL Server
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
 
         // Configure ASP.NET Core Identity
         services.AddIdentity<IdentityUser, IdentityRole>(options =>
