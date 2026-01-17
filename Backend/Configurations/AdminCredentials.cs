@@ -24,9 +24,4 @@ public class AdminCredentials
     /// Gets or sets the administrator password.
     /// </summary>
     public string Password { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the administrator username.
-    /// </summary>
-    public string Username { get; set; } = string.Empty;
 }

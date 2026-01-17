@@ -13,7 +13,6 @@ public class GoogleSettings
     {
         ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")!;
         ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")!;
-        RedirectUri = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI")!;
     }
 
     /// <summary>
@@ -25,9 +24,4 @@ public class GoogleSettings
     /// Gets or sets the Google OAuth 2.0 client secret.
     /// </summary>
     public string ClientSecret { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the OAuth 2.0 redirect URI for callback handling.
-    /// </summary>
-    public string RedirectUri { get; set; } = string.Empty;
 }
