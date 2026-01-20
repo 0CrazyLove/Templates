@@ -11,12 +11,11 @@ The application uses a centralized configuration approach. Below are the key var
 | Variable | Description | Default / Example |
 | :--- | :--- | :--- |
 | `DB_SERVER` | Hostname of the database container. | `database` |
-| `DB_PORT` | Port exposed by the SQL Server container. | `1433` |
+| `DB_PORT` | Port exposed by the PostgreSQL container. | `5432` |
 | `DB_NAME` | Name of the application database. | `AppDB` |
-| `DB_USER` | Database username (typically `sa` for SQL Server). | `sa` |
+| `DB_USER` | Database username. | `postgres` |
 | `DB_PASSWORD` | Database password. **Change this in production.** | `CHANGE_ME...` |
-| `MSSQL_PID` | SQL Server edition. | `Express` |
-| `CONNECTION_STRING` | Full ADO.NET connection string used by the backend. | `Server=database...` |
+| `CONNECTION_STRING` | Full ADO.NET connection string used by the backend. | `Host=database;Port=5432...` |
 
 ### Authentication (JWT)
 
@@ -49,8 +48,8 @@ To enable Google Sign-In, you must configure a project in the [Google Cloud Cons
 The `docker-compose.yml` file defines the services and their relationships.
 
 *   **Services**:
-    *   `database`: SQL Server container.
+    *   `database`: PostgreSQL container.
     *   `backend`: Builds from `./Backend/Dockerfile.backend`. Depends on `database`.
     *   `frontend`: Builds from `./Frontend/Dockerfile.frontend`. Depends on `backend`.
 *   **Networks**: All services communicate over a custom bridge network `servicehub_network`.
-*   **Volumes**: `sqlserver_data` persists database data locally.
+*   **Volumes**: `postgres_data` persists database data locally.

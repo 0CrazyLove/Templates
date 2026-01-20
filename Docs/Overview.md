@@ -3,6 +3,9 @@
 ## Introduction
 ServiceHub is a modern, scalable web application designed to facilitate service management and user interaction. It leverages a robust microservices-ready architecture with a .NET Core backend and a high-performance Astro frontend.
 
+## Live Demo
+You can view the live application deployed on Render here: [ServiceHub Live Demo](https://servicehub-esd7.onrender.com/)
+
 ## Architecture
 
 The project follows a decoupled client-server architecture, containerized using Docker for consistent deployment across environments.
@@ -17,7 +20,7 @@ The project follows a decoupled client-server architecture, containerized using 
     *   Delivers a fast, server-side rendered (SSR) user interface.
     *   Styled with TailwindCSS for a modern, responsive design.
     *   Consumes the backend API for dynamic content.
-*   **Database**: Microsoft SQL Server 2022
+*   **Database**: PostgreSQL 16
     *   Relational database management system for persistent storage.
     *   Running in a Docker container.
 *   **Containerization**: Docker & Docker Compose
