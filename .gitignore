@@ -5,6 +5,7 @@
 
 # dotenv files
 .env
+.env.production
 .env.docker
 
 # User-specific files

@@ -5,8 +5,6 @@
 
 # dotenv files
 .env
-.env.production
-.env.development
 
 # Local development certificates
 .certs
